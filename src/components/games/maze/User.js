@@ -15,7 +15,7 @@ export class User {
 		this.radius = this.diameter / 2;
 		this.dx;
 		this.dy;
-		this.userAngle = Math.PI;
+		this.userAngle = 0;
 		this.FOV = this.toRadians(60);
 		this.colors = {
 			floor: "#FF5733",
@@ -44,25 +44,44 @@ export class User {
 		return distance * Math.cos(diff);
 	}
 	renderScene(rays) {
+		const horizon = this.height / 2;
+	
 		rays.forEach((ray, i) => {
 			const distance = this.fixFishEye(ray.distance, ray.angle, this.userAngle);
-			const wallHeight = (this.maze.cellSize * 5 / distance) * 277 //distance between user eyes and screen
-			this.context.fillStyle = ray.vertical ? ray.aux ? 'yellow' : this.colors.wallDark : ray.aux ? 'green' : this.colors.wall;
-			this.context.fillRect(i, this.maze.width / 2 - wallHeight / 2, 1, wallHeight);
+			const wallHeight = (this.maze.cellSize * 5 / distance) * 277;
+	
+			// WALL
+			this.context.fillStyle = ray.vertical
+				? ray.aux ? 'yellow' : this.colors.wallDark
+				: ray.aux ? 'green' : this.colors.wall;
+	
+			this.context.fillRect(
+				i,
+				horizon - wallHeight / 2,
+				1,
+				wallHeight
+			);
+	
+			// FLOOR
 			this.context.fillStyle = this.colors.floor;
 			this.context.fillRect(
 				i,
-				this.maze.width / 2 + wallHeight / 2,
+				horizon + wallHeight / 2,
 				1,
-				this.maze.width / 2 - wallHeight / 2)
-			this.context.fillStyle = this.colors.cieling;
+				this.height - (horizon + wallHeight / 2)
+			);
+	
+			// CEILING
+			this.context.fillStyle = this.colors.ceiling;
 			this.context.fillRect(
 				i,
 				0,
 				1,
-				this.maze.width / 2 - wallHeight / 2)
-		})
+				horizon - wallHeight / 2
+			);
+		});
 	}
+	
 	toRadians(degrees) {
 		return degrees * (Math.PI / 180);
 	}

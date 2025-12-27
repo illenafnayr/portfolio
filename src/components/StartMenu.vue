@@ -14,7 +14,7 @@
         <span>Email</span>
       </div>
       <a class="block" href="https://github.com/illenafnayr" target="_blank">
-        <div class="container">
+        <div class="container block">
           <img src="../assets/github-logo.png" alt="Git Hub" />
           <span>Git Hub</span>
         </div>
@@ -24,7 +24,7 @@
         href="https://www.linkedin.com/in/ryan-fanelli/"
         target="_blank"
       >
-        <div class="container">
+        <div class="container block">
           <img src="../assets/linkedin-logo.png" alt="Git Hub" />
           <span>LinkedIn</span>
         </div>
@@ -38,12 +38,15 @@
         <span>Portfolio</span>
       </div>
       <hr />
+      <!-- Suspend -->
       <div class="block">
         <img src="../assets/Starfield.png" alt="Portfolio" id="suspend" />
         <span>Suspend</span>
       </div>
+
+      <!-- Shut Down -->
       <a href="https://www.google.com" class="block">
-        <div class="container">
+        <div class="container block">
           <img src="../assets/Power-down.png" alt="Portfolio" id="powerDown" />
           <span>Shut Down</span>
         </div>

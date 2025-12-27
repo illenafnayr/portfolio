@@ -2,6 +2,22 @@
   <div id="desktop">
     <span id="title">Studio Fanelli</span>
     <Icon
+      name="cfd"
+      title="CFD Simulator"
+      filename="cfd-icon.png"
+      :draggable="true"
+      @dblclick="showCFD()"
+      @touchend="showCFD()" />
+    <CFD />
+    <Icon
+      name="airfoil"
+      title="Airfoil Simulator"
+      filename="airfoil-icon.png"
+      :draggable="true"
+      @dblclick="showAirfoil()"
+      @touchend="showAirfoil()" />
+    <Airfoil />
+    <Icon
       name="cli"
       title="CMD PROMPT"
       filename="cli.png"
@@ -87,6 +103,8 @@ import GameSelector from './games/GameSelector.vue';
 import Directory from './Directory.vue';
 import Icon from './Icon.vue';
 import Chicken from './chicken/Chicken.vue';
+import Airfoil from '@/components/Airfoils.vue';
+import CFD from '@/components/CFD.vue';
 
 export default {
   name: 'Desktop',
@@ -100,6 +118,8 @@ export default {
     AboutMe,
     GameSelector,
     Directory,
+    Airfoil,
+    CFD,
   },
   data() {
     return {
@@ -120,6 +140,12 @@ export default {
     },
     showEmail() {
       document.querySelector('#email-container').style.display = "block";
+    },
+    showAirfoil() {
+      document.querySelector('#airfoil-container').style.display = "block";
+    },
+    showCFD() {
+      document.querySelector('#cfd-container').style.display = "block";
     },
     toggleChicken() {
       this.activeChicken = !this.activeChicken;

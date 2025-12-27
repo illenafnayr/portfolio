@@ -2,12 +2,12 @@
   <div :ref="draggable ? 'draggableContainer' : undefined" :id="`${id}-icon-container`" class="icon-container"
     :class="draggable ? undefined : 'icon-grid'">
     <div class="icon-header" @mousedown="dragMouseDown">
-      <img :id="`${id}-icon-img`" :src="require(`../assets/${this.filename}`)" class="icon-img" :alt="name">
+      <img :id="`${id}-icon-img`" :src="getImageUrl()" class="icon-img" :alt="name">
     </div>
     <span class="icon-body">{{ title }}</span>
   </div>
 </template>
-  
+
 <script>
 export default {
   name: 'Icon',
@@ -17,7 +17,7 @@ export default {
     title: String,
     draggable: Boolean
   },
-  data: function () {
+  data() {
     return {
       positions: {
         clientX: undefined,
@@ -30,42 +30,60 @@ export default {
   },
   mounted() {
     if (this.draggable) {
-      document.getElementById(`${this.id}-icon-container`).style.left = `${Math.floor(Math.random() * 90)}%`;
-      document.getElementById(`${this.id}-icon-container`).style.top = `${Math.floor(Math.random() * 75)}%`;
+      // Fixed positions for specific icons
+      const fixedPositions = {
+        'cli': { left: '20%', top: '25%' },
+        'cfd': { left: '30%', top: '25%' },
+        'airfoil': { left: '40%', top: '25%' }
+      };
+
+      const pos = fixedPositions[this.id];
+      if (pos) {
+        const el = document.getElementById(`${this.id}-icon-container`);
+        el.style.left = pos.left;
+        el.style.top = pos.top;
+      } else {
+        // fallback to random for other icons
+        const el = document.getElementById(`${this.id}-icon-container`);
+        el.style.left = `${Math.floor(Math.random() * 90)}%`;
+        el.style.top = `${Math.floor(Math.random() * 75)}%`;
+      }
     }
   },
   methods: {
-    dragMouseDown: function (event) {
-      if (!this.draggable) { return }
-      event.preventDefault()
-      // get the mouse cursor position at startup:
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
-      document.onmousemove = this.elementDrag
-      document.onmouseup = this.closeDragElement
+    dragMouseDown(event) {
+      if (!this.draggable) return;
+      event.preventDefault();
+      this.positions.clientX = event.clientX;
+      this.positions.clientY = event.clientY;
+      document.onmousemove = this.elementDrag;
+      document.onmouseup = this.closeDragElement;
     },
-    elementDrag: function (event) {
-      event.preventDefault()
-      this.positions.movementX = this.positions.clientX - event.clientX
-      this.positions.movementY = this.positions.clientY - event.clientY
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
-      // set the element's new position:
-      this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px'
-      this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
+    elementDrag(event) {
+      event.preventDefault();
+      this.positions.movementX = this.positions.clientX - event.clientX;
+      this.positions.movementY = this.positions.clientY - event.clientY;
+      this.positions.clientX = event.clientX;
+      this.positions.clientY = event.clientY;
+      this.$refs.draggableContainer.style.top =
+        this.$refs.draggableContainer.offsetTop - this.positions.movementY + 'px';
+      this.$refs.draggableContainer.style.left =
+        this.$refs.draggableContainer.offsetLeft - this.positions.movementX + 'px';
     },
     closeDragElement() {
-      document.onmouseup = null
-      document.onmousemove = null
+      document.onmouseup = null;
+      document.onmousemove = null;
     },
+    getImageUrl() {
+      return new URL(`../assets/${this.filename}`, import.meta.url).href;
+    }
   }
 }
 </script>
-  
+
 <style lang="scss">
 @import '../styles/global.scss';
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-
 
 .icon-container {
   position: absolute;

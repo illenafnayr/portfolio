@@ -5,8 +5,11 @@
       <div class="close" v-on:click="closeAboutMe()">X</div>
     </div>
 
-    <label @click="playAlienAttack" class="button_faux">
+    <!-- <label @click="playAlienAttack" class="button_faux">
       <button id="blurb">Alien Attack</button>
+    </label> -->
+    <label @click="playMaze" class="button_faux">
+      <button id="blurb">Maze Game</button>
     </label>
   </div>
 </template>
@@ -26,6 +29,10 @@ export default {
     playAlienAttack() {
       console.log("Alien Attack! 👽");
       this.$router.push("/games/alien-attack");
+    },
+    playMaze() {
+      console.log("Maze Game! 🐭");
+      this.$router.push("/games/maze");
     },
   },
 };

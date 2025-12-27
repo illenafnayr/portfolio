@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import AlienAttack from "../components/games/alien-attack/AlienAttack.vue"
+import Maze from "../components/games/maze/Maze.vue"
 
 
 const routes = [
@@ -14,6 +15,11 @@ const routes = [
     name: "AlienAttack",
     component: AlienAttack
   },
+  {
+    path: "/games/maze",
+    name: "Maze",
+    component: Maze
+  }
 ];
 
 const router = createRouter({
