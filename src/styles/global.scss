@@ -15,6 +15,11 @@
     justify-content: center;
 }
 
+.close:hover {
+    background-color: rgb(193, 0, 0);
+    cursor: pointer;
+}
+
 .close:active {
     border-color: #808080 #FFFFFF #FFFFFF #808080;
 }

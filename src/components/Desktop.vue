@@ -63,7 +63,7 @@
       @touchend="showPortfolio()"
       @mousedown="startDrag($event)"
       @touchstart="startDrag($event)"/>
-    <Portfolio v-bind:style="{ display: isActive ? 'block' : 'none' }" />
+    <Portfolio />
 
     <Icon
       name="aboutme"
