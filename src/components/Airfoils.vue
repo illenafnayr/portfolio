@@ -540,7 +540,7 @@ export default {
   border-width: 1px;
   border-color: #FFFFFF #808080 #808080 #FFFFFF;
   font-family: 'VT323', monospace;
-  display: block;
+  display: none;
   top: 15%;
   left: 25%;
   box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
