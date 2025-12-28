@@ -1,6 +1,6 @@
-@import './variables.scss';
-@import './colors.scss';
-@import './mixins.scss';
+@use './variables' as *;
+@use './colors' as *;
+@use './mixins' as *;
 
 
 .close {

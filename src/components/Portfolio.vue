@@ -72,7 +72,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../styles/global.scss';
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 

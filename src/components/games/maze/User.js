@@ -1,6 +1,39 @@
 import { Maze } from "./Maze.js"
+import brickTexture from '@/assets/bricks-texture.jpg';
+import specialWallTexture from '@/assets/special-wall.png';
+import winTexture from '@/assets/you-won.png';
+
 export class User {
 	constructor(width, height, ctx) {
+		this.wallTexture = new Image();
+		this.wallTexture.src = brickTexture;
+		this.wallTextureLoaded = false;
+
+		this.wallTexture.onload = () => {
+			this.wallTextureLoaded = true;
+			// Redraw the scene once texture is loaded
+			if (this.context) {
+				this.updatePlayer();
+			}
+		};
+
+		this.specialWallTexture = new Image();
+		this.specialWallTexture.src = specialWallTexture;
+		this.specialWallTextureLoaded = false;
+
+		this.specialWallTexture.onload = () => {
+			this.specialWallTextureLoaded = true;
+		};
+
+		this.winTexture = new Image();
+		this.winTexture.src = winTexture;
+		this.winTextureLoaded = false;
+
+		this.winTexture.onload = () => {
+			this.winTextureLoaded = true;
+		};
+		this.remainingSpecialWalls = 0;
+		this.hasWon = false;
 		this.width = width > height ? Math.min(width, 1700) : Math.min(height, 1700);
 		this.height = height > width ? height : width;
 		this.context = ctx;
@@ -15,7 +48,7 @@ export class User {
 		this.radius = this.diameter / 2;
 		this.dx;
 		this.dy;
-		this.userAngle = 0;
+		this.userAngle = Math.PI + 2 * (Math.PI / 2);
 		this.FOV = this.toRadians(60);
 		this.colors = {
 			floor: "#FF5733",
@@ -37,41 +70,24 @@ export class User {
 		this.dy = Math.sin(this.userAngle) * this.speed;
 		this.addEventListeners();
 		this.updatePlayer();
-
+		this.remainingSpecialWalls = this.maze.maze.flat().filter(v => v === 2).length;
 	}
 	fixFishEye(distance, angle, userAngle) {
 		const diff = angle - userAngle;
 		return distance * Math.cos(diff);
 	}
 	renderScene(rays) {
-		const horizon = this.height / 2;
-	
+		// Horizon is at eye level
+		const horizon = this.height / 4;
+
 		rays.forEach((ray, i) => {
+			// Correct distance for fish-eye effect
 			const distance = this.fixFishEye(ray.distance, ray.angle, this.userAngle);
-			const wallHeight = (this.maze.cellSize * 5 / distance) * 277;
-	
-			// WALL
-			this.context.fillStyle = ray.vertical
-				? ray.aux ? 'yellow' : this.colors.wallDark
-				: ray.aux ? 'green' : this.colors.wall;
-	
-			this.context.fillRect(
-				i,
-				horizon - wallHeight / 2,
-				1,
-				wallHeight
-			);
-	
-			// FLOOR
-			this.context.fillStyle = this.colors.floor;
-			this.context.fillRect(
-				i,
-				horizon + wallHeight / 2,
-				1,
-				this.height - (horizon + wallHeight / 2)
-			);
-	
-			// CEILING
+
+			// Scale wall height proportionally to viewport
+			const wallHeight = (this.maze.cellSize / distance) * this.height;
+
+			// Draw ceiling
 			this.context.fillStyle = this.colors.ceiling;
 			this.context.fillRect(
 				i,
@@ -79,9 +95,77 @@ export class User {
 				1,
 				horizon - wallHeight / 2
 			);
+
+			// Draw wall with texture
+			if (this.wallTextureLoaded) {
+				// Calculate texture X coordinate based on hit position
+				let textureX;
+				if (ray.vertical) {
+					// For vertical walls, use Y coordinate modulo cell size
+					textureX = Math.floor(ray.hitY % this.maze.cellSize);
+				} else {
+					// For horizontal walls, use X coordinate modulo cell size
+					textureX = Math.floor(ray.hitX % this.maze.cellSize);
+				}
+
+				// Normalize to texture width
+				textureX = Math.floor((textureX / this.maze.cellSize) * this.wallTexture.width);
+
+				// Apply darkening for different wall orientations
+				if (ray.vertical) {
+					this.context.globalAlpha = ray.aux ? 0.85 : 0.6;
+				} else {
+					this.context.globalAlpha = ray.aux ? 1 : 0.75;
+				}
+
+
+				let textureToUse = this.wallTexture;
+
+				if (ray.aux && this.specialWallTextureLoaded && !this.hasWon) {
+					textureToUse = this.specialWallTexture;
+				}
+
+				if (this.hasWon && this.winTextureLoaded) {
+					textureToUse = this.winTexture;
+				}
+
+				this.context.drawImage(
+					textureToUse,
+					textureX, 0,
+					1, textureToUse.height,
+					i, horizon - wallHeight / 2,
+					1, wallHeight
+				);
+
+
+				// Reset alpha
+				this.context.globalAlpha = 1;
+			} else {
+				// Fallback to solid colors if texture not loaded
+				this.context.fillStyle = ray.vertical
+					? ray.aux ? 'yellow' : this.colors.wallDark
+					: ray.aux ? 'green' : this.colors.wall;
+
+				this.context.fillRect(
+					i,
+					horizon - wallHeight / 2,
+					1,
+					wallHeight
+				);
+			}
+
+			// Draw floor
+			this.context.fillStyle = this.colors.floor;
+			this.context.fillRect(
+				i,
+				horizon + wallHeight / 2,
+				1,
+				this.height - (horizon + wallHeight / 2)
+			);
 		});
 	}
-	
+
+
 	toRadians(degrees) {
 		return degrees * (Math.PI / 180);
 	}
@@ -131,38 +215,38 @@ export class User {
 		return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 	}
 	getVCollision(angle) {
-    const right = Math.abs(Math.floor((angle - Math.PI / 2) / Math.PI) % 2);
-    const firstX = right
-        ? Math.floor(this.userX / this.maze.cellSize) * this.maze.cellSize + this.maze.cellSize
-        : Math.floor(this.userX / this.maze.cellSize) * this.maze.cellSize;
+		const right = Math.abs(Math.floor((angle - Math.PI / 2) / Math.PI) % 2);
+		const firstX = right
+			? Math.floor(this.userX / this.maze.cellSize) * this.maze.cellSize + this.maze.cellSize
+			: Math.floor(this.userX / this.maze.cellSize) * this.maze.cellSize;
 
-    const firstY = this.userY + (firstX - this.userX) * Math.tan(angle);
-    const xA = right ? this.maze.cellSize : -this.maze.cellSize;
-    const yA = xA * Math.tan(angle);
-    let wall;
-    let nextX = firstX;
-    let nextY = firstY;
-    let aux;
-    while (!wall) {
-        const cellX = right
-            ? Math.floor(nextX / this.maze.cellSize)
-            : Math.floor(nextX / this.maze.cellSize) - 1;
+		const firstY = this.userY + (firstX - this.userX) * Math.tan(angle);
+		const xA = right ? this.maze.cellSize : -this.maze.cellSize;
+		const yA = xA * Math.tan(angle);
+		let wall;
+		let nextX = firstX;
+		let nextY = firstY;
+		let aux;
+		while (!wall) {
+			const cellX = right
+				? Math.floor(nextX / this.maze.cellSize)
+				: Math.floor(nextX / this.maze.cellSize) - 1;
 
-        const cellY = Math.floor(nextY / this.maze.cellSize);
-        if (this.outOfMapBounds(cellX, cellY)) {
-            break;
-        }
-        wall = this.maze.maze[cellY] && this.maze.maze[cellY][cellX];
-        if (wall === 2) {
-            aux = true;
-        }
-        if (!wall) {
-            nextX += xA;
-            nextY += yA;
-        }
-    }
-    return { angle, distance: this.distance(this.userX, this.userY, nextX, nextY), vertical: true, aux };
-}
+			const cellY = Math.floor(nextY / this.maze.cellSize);
+			if (this.outOfMapBounds(cellX, cellY)) {
+				break;
+			}
+			wall = this.maze.maze[cellY] && this.maze.maze[cellY][cellX];
+			if (wall === 2) {
+				aux = true;
+			}
+			if (!wall) {
+				nextX += xA;
+				nextY += yA;
+			}
+		}
+		return { angle, distance: this.distance(this.userX, this.userY, nextX, nextY), vertical: true, aux, hitX: nextX, hitY: nextY };
+	}
 
 	getHCollision(angle) {
 		const up = Math.abs(Math.floor(angle / Math.PI) % 2);
@@ -198,7 +282,7 @@ export class User {
 				nextY += yA;
 			}
 		}
-		return { angle, distance: this.distance(this.userX, this.userY, nextX, nextY), vertical: false, aux };
+		return { angle, distance: this.distance(this.userX, this.userY, nextX, nextY), vertical: false, aux, hitX: nextX, hitY: nextY };
 	}
 	castRay(angle) {
 		const vCollision = this.getVCollision(angle);
@@ -250,12 +334,12 @@ export class User {
 	}
 	throttle(func, delay) {
 		let isThrottled = false;
-		
-		return function(...args) {
+
+		return function (...args) {
 			if (!isThrottled) {
 				func.apply(this, args);
 				isThrottled = true;
-				
+
 				setTimeout(() => {
 					isThrottled = false;
 				}, delay);
@@ -267,20 +351,32 @@ export class User {
 		const nextY = this.userY + Math.sin(this.userAngle) * this.speed;
 		const nextMazeX = Math.floor(nextX / this.maze.cellSize);
 		const nextMazeY = Math.floor(nextY / this.maze.cellSize);
-		console.log(this.maze.maze[nextMazeY][nextMazeX])
+
 		if (
 			nextMazeY >= 0 &&
 			nextMazeY < this.maze.maze.length &&
 			nextMazeX >= 0 &&
 			nextMazeX < this.maze.maze[0].length &&
-			this.maze.maze[nextMazeY][nextMazeX] !== 1 && this.maze.maze[nextMazeY][nextMazeX] !== 2
+			this.maze.maze[nextMazeY][nextMazeX] !== 1
 		) {
 			this.userX = nextX;
 			this.userY = nextY;
+
+			// Check special wall
+			if (this.maze.checkSpecialWall(this.userX, this.userY)) {
+				console.log('Found a special wall!');
+				this.remainingSpecialWalls--;
+
+				if (this.remainingSpecialWalls === 0) {
+					this.hasWon = true;
+					this.showWinModal();
+				}
+			}
 		}
 
 		this.updatePlayer();
 	}
+
 	moveBackward() {
 		const nextX = this.userX - Math.cos(this.userAngle) * this.speed;
 		const nextY = this.userY - Math.sin(this.userAngle) * this.speed;
@@ -292,14 +388,59 @@ export class User {
 			nextMazeY < this.maze.maze.length &&
 			nextMazeX >= 0 &&
 			nextMazeX < this.maze.maze[0].length &&
-			this.maze.maze[nextMazeY][nextMazeX] !== 1 && this.maze.maze[nextMazeY][nextMazeX] !== 2
+			this.maze.maze[nextMazeY][nextMazeX] !== 1
 		) {
 			this.userX = nextX;
 			this.userY = nextY;
+
+			if (this.maze.checkSpecialWall(this.userX, this.userY)) {
+				console.log('Found a special wall!');
+				this.remainingSpecialWalls--;
+
+				if (this.remainingSpecialWalls === 0) {
+					this.hasWon = true;
+					this.showWinModal();
+				}
+			}
 		}
 
 		this.updatePlayer();
 	}
+
+	showWinModal() {
+		// Create overlay
+		const modal = document.createElement('div');
+		modal.style.position = 'fixed';
+		modal.style.top = 0;
+		modal.style.left = 0;
+		modal.style.width = '100%';
+		modal.style.height = '100%';
+		modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
+		modal.style.display = 'flex';
+		modal.style.alignItems = 'center';
+		modal.style.justifyContent = 'center';
+		modal.style.zIndex = 1000;
+
+		// Create modal content
+		const content = document.createElement('div');
+		content.style.backgroundColor = 'white';
+		content.style.padding = '2rem';
+		content.style.borderRadius = '12px';
+		content.style.textAlign = 'center';
+		content.style.fontSize = '2rem';
+		content.style.fontWeight = 'bold';
+		content.innerText = '🎉 You Won! 🎉';
+
+		modal.appendChild(content);
+		document.body.appendChild(modal);
+
+		// Optional: remove modal after 5 seconds
+		setTimeout(() => {
+			modal.remove();
+		}, 5000);
+	}
+
+
 	mouseLook(dX) {
 		this.updateIndex();
 
