@@ -5,49 +5,52 @@
     </div>
 
     <div id="appList">
+      <div class="block" v-on:click="showAirfoil()">
+        <img src="../assets/airfoil-icon.png" alt="Airfoil Simulator" class="icon no-invert" />
+        <span>Airfoil Simulator</span>
+      </div>
+      <div class="block" v-on:click="showCFD()">
+        <img src="../assets/cfd-icon.png" alt="CFD SImulator" class="icon no-invert" />
+        <span>CFD Simulator</span>
+      </div>
       <div class="block" v-on:click="showCLI()">
-        <img src="../assets/cli.png" alt="Portfolio" id="resumeIcon" />
+        <img src="../assets/cli.png" alt="CMD Prompt" class="icon no-invert" />
         <span>CMD Prompt</span>
       </div>
       <div class="block" v-on:click="showEmail()">
-        <img src="../assets/Mail.png" alt="Portfolio" id="mailboxPhone" />
+        <img src="../assets/Mail.png" alt="Email" class="icon no-invert" />
         <span>Email</span>
       </div>
-      <a class="block" href="https://github.com/illenafnayr" target="_blank">
-        <div class="container block">
-          <img src="../assets/github-logo.png" alt="Git Hub" />
+
+      <div class="block">
+        <a class="container block" href="https://github.com/illenafnayr" target="_blank">
+          <img src="../assets/github-logo.png" alt="Git Hub" class="icon" />
           <span>Git Hub</span>
-        </div>
-      </a>
-      <a
-        class="block"
-        href="https://www.linkedin.com/in/ryan-fanelli/"
-        target="_blank"
-      >
-        <div class="container block">
-          <img src="../assets/linkedin-logo.png" alt="Git Hub" />
-          <span>LinkedIn</span>
-        </div>
-      </a>
+        </a>
+      </div>
+
+      <div class="block">
+        <a class="container block" href="https://www.linkedin.com/in/ryan-fanelli/" target="_blank">
+        <img src="../assets/linkedin-logo.png" alt="Git Hub" class="icon" />
+        <span>LinkedIn</span>
+        </a>
+      </div>
+
       <div class="block" v-on:click="showPortfolio()">
-        <img
-          src="../assets/DocumentsFolder.png"
-          alt="Portfolio"
-          id="documentsFolder"
-        />
+        <img src="../assets/DocumentsFolder.png" alt="Portfolio" class="icon no-invert" />
         <span>Portfolio</span>
       </div>
       <hr />
       <!-- Suspend -->
       <div class="block">
-        <img src="../assets/Starfield.png" alt="Portfolio" id="suspend" />
+        <img src="../assets/Starfield.png" alt="Portfolio" class="icon no-invert" />
         <span>Suspend</span>
       </div>
 
       <!-- Shut Down -->
       <a href="https://www.google.com" class="block">
         <div class="container block">
-          <img src="../assets/Power-down.png" alt="Portfolio" id="powerDown" />
+          <img src="../assets/Power-down.png" alt="Portfolio" class="icon no-invert" />
           <span>Shut Down</span>
         </div>
       </a>
@@ -75,6 +78,12 @@ export default {
       input.focus();
       input.select();
     },
+    showCFD() {
+      document.querySelector('#cfd-container').style.display = "block";
+    },
+    showAirfoil() {
+      document.querySelector('#airfoil-container').style.display = "block";
+    },
   },
 };
 </script>
@@ -88,11 +97,10 @@ export default {
   position: absolute;
   left: 1.5px;
   bottom: 38px;
-  width: 175px;
-  height: 275px;
+  width: 200px;
+  height: 310px;
   background-color: rgb(191, 191, 191);
   border: 1px solid black;
-  /* border-width:1px; */
   border-color: #ffffff #808080 #808080 #ffffff;
   display: flex;
   font-family: "VT323", monospace;
@@ -102,7 +110,6 @@ export default {
 #sidebar {
   height: 100%;
   width: 12.5%;
-  /* background-color: rgb(0,0,123); */
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -128,18 +135,17 @@ export default {
 }
 
 hr {
-  width: "98%";
+  width: 98%;
   margin: 0;
 }
 
 .block {
-  height: 14.2857142857%;
+  height: 3rem;
   box-sizing: border-box;
   width: 100%;
   display: flex;
   align-items: center;
   color: black;
-  /* border: 1px solid gold; */
 }
 
 .block:hover {
@@ -148,7 +154,7 @@ hr {
   color: #ffffff;
 }
 
-.block:hover img {
+.block:hover .icon {
   filter: invert(100%);
 }
 
@@ -164,50 +170,17 @@ hr {
   height: 100%;
 }
 
-img {
-  width: 10%;
-  margin: 0% 3% 0% 5%;
+/* Standardized icon styling */
+.icon {
+  width: 30px;
+  height: 3opx;
+  object-fit: contain;
+  margin-left: 5%;
+  margin-right: 4%;
 }
 
-.block:hover #documentsFolder,
-.block:hover #mailboxPhone,
-.block:hover #resumeIcon,
-.block:hover #suspend,
-.block:hover #powerDown {
+/* Prevent inversion for specific icons */
+.block:hover .icon.no-invert {
   filter: none;
-}
-
-#documentsFolder {
-  height: 65%;
-  margin-left: 1.5%;
-  margin-right: 1%;
-  width: auto;
-}
-
-#mailboxPhone {
-  height: 45%;
-  width: auto;
-  margin-left: 3%;
-  margin-right: 3.5%;
-}
-
-#resumeIcon {
-  height: 40%;
-  width: auto;
-  margin-right: 3%;
-}
-
-#suspend {
-  height: 52.5%;
-  width: auto;
-  margin-left: 3.5%;
-  margin-right: 2.5%;
-}
-
-#powerDown {
-  height: 60%;
-  width: auto;
-  margin-left: 2.5%;
-  margin-right: 1.75%;
 }
 </style>

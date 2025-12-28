@@ -12,8 +12,12 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@/styles/variables.scss";`,
-        api: 'modern-compiler'
+        // automatically load variables, colors, and mixins in all components
+        additionalData: `
+          @use "@/styles/variables" as *;
+          @use "@/styles/colors" as *;
+          @use "@/styles/mixins" as *;
+        `
       }
     }
   },
