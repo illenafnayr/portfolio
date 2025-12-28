@@ -8,7 +8,7 @@
       <!-- RC Plane Project -->
       <div class="project-section">
         <h3>Custom RC Aircraft Build</h3>
-        <p>Design and construction of a custom radio-controlled aircraft</p>
+        <p>Construction of a 3d printed radio-controlled aircraft</p>
         <div class="image-gallery">
           <img :src="rcPlane1" alt="RC Plane Build 1" class="project-image" @click="openImage(rcPlane1)" />
           <img :src="rcPlane2" alt="RC Plane Build 2" class="project-image" @click="openImage(rcPlane2)" />
