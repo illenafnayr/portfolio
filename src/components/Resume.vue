@@ -1,227 +1,379 @@
 <template>
   <div ref="draggableContainer" id="resume-container">
+    <!-- Header -->
     <div id="resume-header" @mousedown="dragMouseDown">
       <span>Resume</span>
-      <div class="close" v-on:click="closePortfolio()">X</div>
+      <div class="close" @click="closePortfolio">X</div>
     </div>
-    <!-- <iframe src="https://drive.google.com/file/d/1KP3j4HTnb6PT7QXT_49KP7CdftAgPvc7/preview" width="640" height="480"></iframe> -->
-    <div id="resumeBody">
-      <span><a href="https://docs.google.com/document/d/1HC395Lwld-MCwlSDf75lkga1hZoJFETzk1aOZK7pJr0/edit" target="_blank">(click for a more formal .pdf version)</a></span>
-      <img src="../assets/me.jpeg" alt="My Smiling Face" id="myFace">
-      <h3>Ryan Fanelli</h3>
-      <span class="bold">Full-Stack Software Engineer</span>
-      <div>
-        <span class="contact"><a href="https://www.linkedin.com/in/ryan-fanelli/" target="_blank">LinkedIn</a></span>
-        <span class="contact"><a href = "mailto: illenafnayr@gmail.com">illenafnayr@gmail.com</a></span>
-        <span class="contact"><a href="https://github.com/RyanFanelli" target="_blank">GitHub</a></span>
+
+    <!-- Scrollable body -->
+    <div id="resume-body">
+      <!-- Header Info -->
+      <div class="center">
+        <img src="../assets/me.jpeg" alt="My Smiling Face" id="myFace"></img>
+        <h2>Ryan Fanelli</h2>
+        <div class="contact-line">
+          +1-(802)-275-7764 ·
+          <a href="mailto:ryan@gaiatechnologies.io">ryan@gaiatechnologies.io</a>
+        </div>
+        <div>U.S.A / Italia · <a href="https://www.RyanFanelli.com" target="_blank">www.RyanFanelli.com</a></div>
       </div>
-      <div id="stack">
-        <img class="tech-logo" src="../assets/react.png" alt="react">
-        <img class="tech-logo" src="../assets/vue.png" alt="vue">
-        <img class="tech-logo" src="../assets/node.png" alt="node">
-        <img class="tech-logo" src="../assets/mysql.png" alt="mysql">
-        <img class="tech-logo" src="../assets/express.png" alt="express">
-        <img class="tech-logo" src="../assets/mongodb.png" alt="mongodb">
-        <img class="tech-logo" src="../assets/rubyonrails.png" alt="ruby on rails">
-        <img class="tech-logo" src="../assets/postgresql.png" alt="postgresql">
-      </div>
-      <hr style="width: 95%">
-      <div id="skills">
-        <span class="bold">Skills</span>
-        <div id="frontend"><span class="bold">Frontend: </span>React, Vue,  Angular, NextJS, React Native, ThreeJs, Wordpress, Headless WP,  PHP, JQuery, E JS, Sass, CSS, HTML, TypeScript, JavaScript, Design Systems.</div>
-        <div id="backend"><span class="bold">Backend: </span>Java, Spring/SpringBoot, Docker, Firebase, Nginx, NodeJS, ExpressJS, NoSql, PostgreSQL, MySQL, Ruby on Rails, Maven, Oracle</div>
-        <div id="technologies"><span class="bold">Other: </span>R programming language, Python, Tensorflow, PyTorch, Git/GitHub. Agile development practices. Always thirsty for knowledge.</div>
-      </div>
-      <hr style="width: 95%">
-      <div>
-        <span class="bold">Experience</span>
-        <div>
-          <div class="project" id="experience">
-            <span class="bold">Software Engineer - Green Mountain Power // April '21 to Present</span>
-            <ul>
-              <li>Full stack engineer</li>
-              <li><a href="https:/www.greenmountainpower.com" target="_blank">www.greenmountainpower.com</a></li>
-            </ul>
+
+      <hr />
+
+      <!-- Summary -->
+      <section>
+        <p><b>My mission is to empower a better planet through innovation and sustainability.</b></p>
+        <p>
+          A dedicated engineer, aspiring pilot and entrepreneur passionate about sustainability and transforming ideas
+          into
+          meaningful, technology-driven solutions. With a background spanning software engineering, biological sciences,
+          and a
+          growing expertise in aerospace systems and a particular passion for sustainable aviation, I thrive at the
+          intersection
+          of innovation and practicality, driving progress through creativity, precision, and diverse ways of thinking.
+        </p>
+        <p>
+          I combine analytical rigor with curiosity and empathy, inspiring confidence within teams and sparking
+          collaboration
+          that leads to real-world impact and a more sustainable future.
+        </p>
+      </section>
+
+      <hr />
+
+      <!-- EXPERIENCE -->
+      <section>
+        <h3 @click="toggleSection('experience')">
+          Experience <span>{{ sectionsOpen.experience ? '▼' : '▲' }}</span>
+        </h3>
+        <div v-show="sectionsOpen.experience">
+          <div class="item" v-for="exp in experiences" :key="exp.title">
+            <div class="item-content">
+              <div class="item-title">
+                {{ exp.title }}
+                <img v-if="exp.icon" :src="exp.iconUrl" class="item-icon" />
+              </div>
+              <div class="item-meta">{{ exp.date }}</div>
+              <div class="item-role">{{ exp.role }}</div>
+              <p v-if="exp.description">{{ exp.description }}</p>
+              <ul v-if="exp.points">
+                <li v-for="(point, idx) in exp.points" :key="idx">{{ point }}</li>
+              </ul>
+            </div>
           </div>
         </div>
-        <hr style="width: 95%">
-        <div>
-          <div class="project" id="experience">
-            <span class="bold">I.T. Consultant - G.T.DESIGN // December '22 to March '22'</span>
-            <ul>
-              <li>Freelance I.T.  consultant.</li>
-              <li>Reorganization and coordination of internal team and external resources used by the company.</li>
-              <li>Project management for development and implementation of services and information technology.</li>
-              <li><a href="https://www.gtdesign.it/" target="_blank">www.gtdesign.it/</a></li>
-            </ul>
+      </section>
+
+      <hr />
+
+      <!-- EDUCATION -->
+      <section>
+        <h3 @click="toggleSection('education')">
+          Education <span>{{ sectionsOpen.education ? '▼' : '▲' }}</span>
+        </h3>
+        <div v-show="sectionsOpen.education">
+          <div class="item" v-for="edu in education" :key="edu.institution">
+            <div class="item-content">
+              <div class="item-title">{{ edu.institution }}
+                <img v-if="edu.icon" :src="edu.iconUrl" class="item-icon" :style="eduIconStyle(edu.institution)" />
+              </div>
+              <div class="item-meta">{{ edu.date }}</div>
+              <p v-if="edu.degree">{{ edu.degree }}</p>
+              <p v-if="edu.note">{{ edu.note }}</p>
+              <ul v-if="edu.points">
+                <li v-for="(point, idx) in edu.points" :key="idx">{{ point }}</li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-      <hr style="width: 95%">
-      <div>
-        <span class="bold">Other Experience</span>
-        <div>
-          <div class="project" id="experience">
-            <span class="bold">Research Assistant - Woodhams Lab // January ‘19 to January ‘20</span>
-            <ul>
-              <li>Conducted experiments, statistically analyzed field data to help cure global amphibian pathogens.</li>
-              <li>Audited a course in R programming language.</li>
-              <li>Data analysis with Python Pandas, Matplotlib, and R.</li>
-            </ul>
+      </section>
+
+      <hr />
+
+      <!-- CERTIFICATES -->
+      <section>
+        <h3 @click="toggleSection('certificates')">
+          Certificates & Continuing Education <span>{{ sectionsOpen.certificates ? '▼' : '▲' }}</span>
+        </h3>
+        <div v-show="sectionsOpen.certificates">
+          <div class="item" v-for="cert in certificates" :key="cert.title">
+            <div class="item-content">
+              <div class="item-title">{{ cert.title }}
+                <img v-if="cert.icon" :src="cert.iconUrl" class="item-icon" :style="certIconStyle(cert.title)" />
+              </div>
+              <div class="item-meta">{{ cert.date }}</div>
+              <p v-if="cert.description">{{ cert.description }}</p>
+            </div>
           </div>
         </div>
-        <div class="project" id="experience">
-          <span class="bold">Guitar/Synthesizer/Sound Design - Andrew Alden Ensemble // 2014 - 2016</span>
+      </section>
+
+      <hr />
+
+      <!-- TECHNICAL SKILLS -->
+      <section>
+        <h3 @click="toggleSection('skills')">
+          Technical Skills <span>{{ sectionsOpen.skills ? '▼' : '▲' }}</span>
+        </h3>
+        <div v-show="sectionsOpen.skills">
           <ul>
-            <li>Circuit-bent synthesizers and digitally manipulated audio data to create unique sounds.</li>
-            <li>Produced textual scores for film and performs them in front of a live audience to transform the picture with new sounds and experiences.</li>
+            <li><b>Engineering & Analysis:</b> MATLAB, Simulink, SolidWorks, Fusion 360 (Basic), Nastran/Patran, ANSYS
+              Mechanical, ANSYS Fluent, XFOIL (learning)</li>
+            <li><b>Instrumentation & Prototyping:</b> Arduino, Raspberry Pi, sensors, data acquisition systems</li>
+            <li><b>Programming & Data Science:</b> Python, R, Java, JavaScript</li>
+            <li><b>Libraries:</b> NumPy, Pandas, Matplotlib, Seaborn, Scikit-learn, TensorFlow, Keras</li>
+            <li><b>Mathematics & Statistics:</b> Calculus, Real Analysis, Linear Algebra, Statistics</li>
+            <li><b>Data Analysis & Visualization:</b> Data cleaning, exploratory data analysis, visualization,
+              regression, classification, clustering, basic neural networks</li>
+            <li><b>Scientific Computing:</b> Applying programming to simulation, modeling, and quantitative analysis
+            </li>
           </ul>
         </div>
-        <div class="project" id="experience">
-          <span class="bold">Production Intern - Z2 Productions // 2012</span>
+      </section>
+
+      <hr />
+
+      <!-- LANGUAGES -->
+      <section>
+        <h3 @click="toggleSection('languages')">
+          Languages <span>{{ sectionsOpen.languages ? '▼' : '▲' }}</span>
+        </h3>
+        <div v-show="sectionsOpen.languages">
           <ul>
-            <li>Front and back of house audio engineer intern at Fox Theatre and Boulder Theatre.</li>
-            <li>Worked with live recording software such as Pro Tools and logic.</li>
+            <li>English - Native</li>
+            <li>Italiano - B1/B2</li>
+            <li>Français - A2</li>
           </ul>
         </div>
-      </div>
-      <hr style="width: 95%">
-      <div id="projects">
-        <span class="bold">Projects</span>
-        <div class="project">
-          <span class="bold"><a href="https://github.com/SustainableCities" target="_blank">Sustainable Cities hackathon</a></span>
+      </section>
+
+      <hr />
+
+      <!-- SOFT SKILLS / OTHER -->
+      <section>
+        <h3 @click="toggleSection('softSkills')">
+          Soft Skills / Other <span>{{ sectionsOpen.softSkills ? '▼' : '▲' }}</span>
+        </h3>
+        <div v-show="sectionsOpen.softSkills">
           <ul>
-            <li>Three day hackathon with a data scientist, UX/UI designers and a development team.</li>
-            <li>React application, with an express server. Maps a CSV file (created from an array public data resources, handed over from data scientist) to usable REST API using Sequelize</li>
+            <li>Aviation Enthusiast</li>
+            <li>Creative Thinking</li>
+            <li>Analytical Thinking</li>
+            <li>Leadership</li>
+            <li>Teamwork & Collaboration</li>
+            <li>Continuous Learning</li>
+            <li>Adaptability</li>
+            <li>Effective Communication</li>
+            <li>Problem Solving & Innovation</li>
+            <li>Entrepreneurship</li>
+            <li>Project Management</li>
+            <li>Agile Methodologies</li>
+            <li>Reading & Writing Documentation</li>
+            <li>LaTeX</li>
+            <li>Time Management</li>
+            <li>Organization</li>
+            <li>Word / Excel</li>
+            <li>Linux OS</li>
+            <li>Double Bass</li>
+            <li>Full Stack Development (TypeScript, Various Frameworks, Java/Spring, WordPress, System Design, DevOps,
+              etc.)</li>
           </ul>
         </div>
-      </div>
-      <hr style="width: 95%">
-      <div id="education">
-        <span class="bold">Education</span>
-        <div class="project">
-          <span class="bold">General Assembly - Software Engineering Immersive Course</span>
-          <ul>
-            <li>Full-time, 500+ hour Software Engineering Immersive program covering HTML, CSS, JavaScript, ReactJS, Node, MongoDB/Mongoose, Express, SQL, Ruby on Rails</li>
-            <li>Completed coursework and projects using front-end development, full-stack development, front-end frameworks, and APIs.</li>
-          </ul>
-        </div>
-        <div class="project">
-          <span class="bold">University of Massachusetts Boston - Biochemistry</span>
-          <ul>
-            <li>136 credits toward Bachelor of Science</li>
-          </ul>
-        </div>
-        <div class="project">
-          <span class="bold">Berklee College of Music - Jazz Composition</span>
-          <ul>
-            <li>94 credits toward Bachelor of Music</li>
-          </ul>
-        </div>        
-      </div>
-      <hr style="width: 95%">
+      </section>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Resume',
-  data: function () {
+  name: "Resume",
+  data() {
     return {
-      positions: {
-        clientX: undefined,
-        clientY: undefined,
-        movementX: 0,
-        movementY: 0,
-      }
-    }
+      experiences: [
+        {
+          title: "H₂ EDGE",
+          role: "Design and Manufacturing",
+          date: "October 2025 - Present",
+          icon: "h2edge-icon.jpeg",
+          description: "H₂ Edge is a student-led research initiative at the Politecnico di Torino aimed at reducing the carbon footprint of the aviation industry through the development of a direct hydrogen combustion system for retrofitted civil aviation turbojet engines.",
+          points: [
+            "Contributing to the design and manufacturing of hydrogen-compatible fuel injectors and combustion chambers optimized for H₂.",
+            "MATLAB to analyze and optimize certain design parameters.",
+            "CAD modeling (SOLIDWORKS), learning and performing CFD (Ansys) simulations to analyze injector flow behavior for improved atomization and mixing.",
+            "Support the manufacturing of prototype components and conduct cold-flow testing with helium.",
+            "Apply sustainable propulsion engineering principles to advance hydrogen-based retrofitting solutions."
+          ]
+        },
+        {
+          title: "OSIRIS",
+          role: "Head of Prototyping Section",
+          date: "October 2025 - Present",
+          icon: "osiris-icon.png",
+          description: "OSIRIS is a student project in collaboration with Politecnico di Torino and Politecnico di Milano, dedicated to long-term space sustainability and the development of a circular space economy through Active Debris Removal (ADR) and in-orbit recycling of orbital waste.",
+          points: [
+            "Lead a 12-member interdisciplinary team organized into four sub-teams: Kinematics, Mechanics, Electronics & PCBs, and Software.",
+            "Oversee systems-level design and concurrent engineering workflows for the development of an orbital debris capture manipulator.",
+            "Conduct high-level systems engineering tasks, including requirements definition, interface management, and cross-team coordination using MBSE principles.",
+            "Support low-level design and analysis efforts including materials selection, structural analysis, and prototype manufacturability."
+          ]
+        },
+        {
+          title: "Gaia Technologies",
+          role: "Founder",
+          date: "Jan 2023 - Present",
+          icon: "gaia-icon.svg",
+          description: "Mission to create an Intelligent Agricultural Digital Twin System integrating IoT sensors, edge/cloud computing, and data science to simulate, predict, and automate agricultural processes.",
+          points: [
+            "Optimize efficiency, reduce costs, and increase yields for agricultural clients.",
+            "Funded by software consulting and development services for US and Italian small businesses."
+          ]
+        },
+        {
+          title: "Green Mountain Power",
+          role: "Full Stack Software Engineer",
+          date: "Apr 2021 - Apr 2024",
+          icon: "green-mountain-power-icon.svg",
+          points: [
+            "Provided performance-driven software solutions across mobile app, website, and internal development.",
+            "Mentored junior team members and facilitated knowledge-sharing sessions.",
+            "Established and enforced software development best practices."
+          ]
+        },
+        {
+          title: "Woodhams Lab",
+          role: "Research Assistant",
+          date: "Jan 2019 - Jan 2020",
+          icon: "woodhams-lab-icon.png",
+          points: [
+            "Conducted research on amphibian chytrid fungi (Batrachochytrium dendrobatidis and B. salamandrivorans).",
+            "Analyzed field data using Python, Matplotlib, and R.",
+            "Audited R programming course and conducted statistical data analysis."
+          ]
+        }
+      ],
+      education: [
+        {
+          institution: "Politecnico di Torino",
+          date: "2025 - Present",
+          degree: "Mechanical Engineering",
+          note: "Plan to transfer to Ingegneria Aerospaziale (Aerospace Engineering) after receiving Italian language requirements.",
+          points: ["Member of H₂ EDGE and OSIRIS student teams, both focused on sustainability in aerospace"],
+          icon: "polito-icon.png"
+        },
+        {
+          institution: "University of Massachusetts",
+          date: "2018 - 2020",
+          degree: "Biochemistry, 136 credits toward B.S.",
+          points: ["Member of Beta Beta Beta Biology Honors Society", "Cum Laude Honors", "Participated in Research Immersion Project leading to Woodhams Lab"],
+          icon: "umass-icon.png"
+        },
+        {
+          institution: "Berklee College of Music",
+          date: "2015 - 2017",
+          degree: "Jazz Composition & Double Bass Performance, 94 credits toward Bachelor of Music",
+          points: ["Dean's List", "Member of Berklee Contemporary Symphony Orchestra", "Toured with Professor Allen Levine’s Stämbandet", "Andrew Alden Ensemble - Guitar/Synthesizer/Sound Design"],
+          icon: "berklee-icon.png"
+        }
+      ],
+      certificates: [
+        {
+          title: "EASA Private Pilot Licence (PPL) – In Progress",
+          date: "Begins January 2026",
+          description: "Scheduled 100-hour ground school course in January, working toward completion of the EASA Private Pilot Licence.",
+          icon: "ppl-icon.png"
+        },
+        {
+          title: "MIT Applied Data Science Program",
+          date: "Mar 2024 - Jun 2024",
+          description: "Focused on supervised/unsupervised learning, time-series analysis, recommendation systems, regression, deep learning. Capstone project: Using Convolutional Neural Networks to detect malaria infected blood cells.",
+          icon: "mit-icon.png"
+        },
+        {
+          title: "General Assembly Software Engineering Bootcamp",
+          date: "Nov 2020 - Feb 2021",
+          description: "500+ hour immersive program covering ReactJS, Node, MongoDB/Mongoose, Express, HTML, CSS, JavaScript, SQL, Python, Django.",
+          icon: "ga-icon.png"
+        }
+      ],
+      sectionsOpen: {
+        experience: true,
+        education: true,
+        certificates: true,
+        skills: true,
+        languages: true,
+        softSkills: true
+      },
+      positions: {}
+    };
+  },
+  created() {
+    // Map assets to URLs using Vite's import.meta.glob
+    const icons = import.meta.glob('@/assets/*', { eager: true, as: 'url' });
+
+    const mapIcon = (iconName) => icons[`/src/assets/${iconName}`] || null;
+
+    // Attach URLs
+    this.experiences.forEach(exp => exp.iconUrl = mapIcon(exp.icon));
+    this.education.forEach(edu => edu.iconUrl = mapIcon(edu.icon));
+    this.certificates.forEach(cert => cert.iconUrl = mapIcon(cert.icon));
   },
   methods: {
-    dragMouseDown: function (event) {
-      event.preventDefault()
-      // get the mouse cursor position at startup:
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
-      document.onmousemove = this.elementDrag
-      document.onmouseup = this.closeDragElement
+    dragMouseDown(event) {
+      event.preventDefault();
+      this.positions = { clientX: event.clientX, clientY: event.clientY };
+      document.onmousemove = this.elementDrag;
+      document.onmouseup = this.closeDragElement;
     },
-    elementDrag: function (event) {
-      event.preventDefault()
-      this.positions.movementX = this.positions.clientX - event.clientX
-      this.positions.movementY = this.positions.clientY - event.clientY
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
-      // set the element's new position:
-      this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px'
-      this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
+    elementDrag(event) {
+      const movementX = this.positions.clientX - event.clientX;
+      const movementY = this.positions.clientY - event.clientY;
+      this.positions.clientX = event.clientX;
+      this.positions.clientY = event.clientY;
+      this.$refs.draggableContainer.style.top = this.$refs.draggableContainer.offsetTop - movementY + "px";
+      this.$refs.draggableContainer.style.left = this.$refs.draggableContainer.offsetLeft - movementX + "px";
     },
-    closeDragElement () {
-      document.onmouseup = null
-      document.onmousemove = null
+    closeDragElement() {
+      document.onmouseup = null;
+      document.onmousemove = null;
     },
-    closePortfolio () {
-      document.querySelector('#resume-container').style.display = 'none'
+    closePortfolio() {
+      this.$refs.draggableContainer.style.display = "none";
+    },
+    toggleSection(section) {
+      this.sectionsOpen[section] = !this.sectionsOpen[section];
+    },
+    eduIconStyle(institution) {
+      if (institution === "Politecnico di Torino") {
+        return { maxHeight: "70px" }; // bigger
+      } else if (institution === "Berklee College of Music") {
+        return { maxHeight: "30px" }; // smaller
+      } else {
+        return { maxHeight: "50px" }; // default
+      }
+    },
+    certIconStyle(title) {
+      if (title.includes("MIT")) {
+        return { maxHeight: "110px" }; // make MIT icon bigger
+      } else {
+        return { maxHeight: "50px" }; // default size
+      }
     }
   }
-}
+};
 </script>
 
-<style lang="scss">
-@import '../styles/global.scss';
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-
-
+<style scoped>
 #resume-container {
   position: absolute;
-  z-index: 10;
-  height: 55%;
-  width: 50%;
-  border: 2px solid;
-  background-color: rgb(192,192,192);
-  border-width:1px;
-  border-color:#FFFFFF #808080 #808080 #FFFFFF;
+  width: 60%;
+  height: 80%;
   resize: both;
   overflow: hidden;
-  font-family: 'VT323', monospace;
-  text-align:center;
-  display: none;
-  top: 21%;
-  left: 30%;
-}
-#resume-header {
-  cursor:move;
+  background: #c0c0c0;
+  border: 2px solid black;
+  font-family: monospace;
   z-index: 10;
-  border: 1px solid black;
-  color: white;
-  background-image: linear-gradient(90deg, rgb(0,0,123), black);
-  display: flex;
-  justify-content: space-between;
-}
-
-.close {
-  border: 1px solid;
-  border-width:1px;
-  border-color:#FFFFFF #808080 #808080 #FFFFFF;
-  background-color: rgb(192,192,192);
-  width: 3%;
-}
-
-.close:active{
-    border-color: #808080  #FFFFFF  #FFFFFF #808080;
-}
-
-
-
-#resumeBody {
-  height: 95%;
-  width: 100%;
-  /* border: 1px solid gold; */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow: auto;
-  /* justify-content: center; */
 }
 
 #myFace {
@@ -232,28 +384,72 @@ export default {
   margin-top: 3%;
 }
 
-.contact {
-  margin: 2%;
-}
-
-#stack{
+#resume-header {
+  height: 32px;
+  background: linear-gradient(90deg, navy, black);
+  color: white;
   display: flex;
-  /* margin: 2.5%; */
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px;
+  cursor: move;
 }
 
-.tech-logo {
-  height: 25px;
+#resume-body {
+  height: calc(100% - 32px);
+  overflow-y: auto;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
-.bold {
-  font-weight: 600;
+.center {
+  text-align: center;
 }
 
-.project {
-  text-align: left;
+.contact-line {
+  margin-bottom: 0.25rem;
 }
 
-#experience {
-  margin-top: 2.5%;
+.item {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.item-icon {
+  margin-left: 1rem;
+  max-height: 50px;
+  width: auto;
+  height: auto;
+}
+
+.item-content {
+  flex: 1;
+}
+
+.item-title {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.item-meta {
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+.item-role {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+h3 {
+  cursor: pointer;
+  user-select: none;
+}
+
+ul {
+  margin-left: 1rem;
 }
 </style>

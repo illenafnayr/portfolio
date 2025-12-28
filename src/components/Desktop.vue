@@ -7,7 +7,9 @@
       filename="cfd-icon.png"
       :draggable="true"
       @dblclick="showCFD()"
-      @touchend="showCFD()" />
+      @touchend="showCFD()"
+      @mousedown="startDrag($event)"
+    @touchstart="startDrag($event)" />
     <CFD />
     <Icon
       name="airfoil"
@@ -15,7 +17,9 @@
       filename="airfoil-icon.png"
       :draggable="true"
       @dblclick="showAirfoil()"
-      @touchend="showAirfoil()" />
+      @touchend="showAirfoil()"
+      @mousedown="startDrag($event)"
+    @touchstart="startDrag($event)" />
     <Airfoil />
     <Icon
       name="cli"
@@ -23,7 +27,9 @@
       filename="cli.png"
       :draggable="true"
       @dblclick="showCli()"
-      @touchend="showCli()" />
+      @touchend="showCli()"
+      @mousedown="startDrag($event)"
+      @touchstart="startDrag($event)"/>
     <CLI @createDirectory="createDirectory" />
 
     <Icon
@@ -32,7 +38,9 @@
       filename="Mail.png"
       :draggable="true"
       @dblclick="showEmail()"
-      @touchend="showEmail()" />
+      @touchend="showEmail()"
+      @mousedown="startDrag($event)"
+      @touchstart="startDrag($event)"/>
     <Email />
 
     <Icon
@@ -41,7 +49,9 @@
       filename="Resume-Icon.png"
       :draggable="true"
       @dblclick="showResume()"
-      @touchend="showResume()" />
+      @touchend="showResume()"
+      @mousedown="startDrag($event)"
+      @touchstart="startDrag($event)"/>
     <Resume v-bind:style="{ display: isActive ? 'block' : 'none' }" />
 
     <Icon
@@ -50,7 +60,9 @@
       filename="DocumentsFolder.png"
       :draggable="true"
       @dblclick="showPortfolio()"
-      @touchend="showPortfolio()" />
+      @touchend="showPortfolio()"
+      @mousedown="startDrag($event)"
+      @touchstart="startDrag($event)"/>
     <Portfolio v-bind:style="{ display: isActive ? 'block' : 'none' }" />
 
     <Icon
@@ -59,7 +71,9 @@
       filename="Pin-sheet.png"
       :draggable="true"
       @dblclick="showAboutMe()"
-      @touchend="showAboutMe()" />
+      @touchend="showAboutMe()"
+      @mousedown="startDrag($event)"
+      @touchstart="startDrag($event)"/>
     <AboutMe v-bind:style="{ display: isActive ? 'block' : 'none' }" />
 
     <Icon
@@ -67,7 +81,10 @@
       title="Games!"
       filename="DocumentsFolder.png"
       :draggable="true"
-      v-on:dblclick="showGameSelector()" @touchend="showGameSelector()" />
+      v-on:dblclick="showGameSelector()"
+      @touchend="showGameSelector()"
+      @mousedown="startDrag($event)"
+      @touchstart="startDrag($event)"/>
     <GameSelector v-bind:style="{ display: isActive ? 'block' : 'none' }" />
 
     <Icon
@@ -76,7 +93,9 @@
       filename="chicken.png"
       :draggable="true"
       @dblclick="toggleChicken()"
-      @touchend="toggleChicken()" />
+      @touchend="toggleChicken()"
+      @mousedown="startDrag($event)"
+      @touchstart="startDrag($event)"/>
     <Chicken v-bind:style="{ display: activeChicken ? 'block' : 'none' }" />
 
     <div v-for="(directory, i) in directories" :key="i">
@@ -85,7 +104,10 @@
         :title=directory.name
         filename="DocumentsFolder.png"
         :draggable="true"
-        @dblclick="showDirectory(directory.id)" @touchend="showDirectory(directory.id)" />
+        @dblclick="showDirectory(directory.id)"
+        @touchend="showDirectory(directory.id)"
+        @mousedown="startDrag($event)"
+        @touchstart="startDrag($event)"/>
       <Directory :name="directory.name" :directories="directories" />
     </div>
 
@@ -173,6 +195,53 @@ export default {
       if (document.querySelector(`#${id}-directory-container`).style.display === "none") {
         document.querySelector(`#${id}-directory-container`).style.display = "block";
       }
+    },
+    startDrag(event) {
+      event.preventDefault();
+      const icon = event.currentTarget;
+      const desktop = document.getElementById('desktop');
+      const desktopRect = desktop.getBoundingClientRect();
+      
+      let startX, startY, startLeft, startTop;
+
+      if (event.type === 'touchstart') {
+        startX = event.touches[0].clientX;
+        startY = event.touches[0].clientY;
+      } else {
+        startX = event.clientX;
+        startY = event.clientY;
+      }
+
+      startLeft = icon.offsetLeft;
+      startTop = icon.offsetTop;
+
+      const move = (e) => {
+        let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        let clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+        let newLeft = startLeft + (clientX - startX);
+        let newTop = startTop + (clientY - startY);
+
+        // constrain inside desktop
+        newLeft = Math.max(0, Math.min(newLeft, desktopRect.width - icon.offsetWidth));
+        newTop = Math.max(0, Math.min(newTop, desktopRect.height - icon.offsetHeight));
+
+        icon.style.position = 'absolute';
+        icon.style.left = newLeft + 'px';
+        icon.style.top = newTop + 'px';
+      };
+
+      const stop = () => {
+        window.removeEventListener('mousemove', move);
+        window.removeEventListener('mouseup', stop);
+        window.removeEventListener('touchmove', move);
+        window.removeEventListener('touchend', stop);
+      };
+
+      window.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', stop);
+      window.addEventListener('touchmove', move);
+      window.addEventListener('touchend', stop);
     }
   }
 }
