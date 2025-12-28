@@ -4,7 +4,16 @@
       <span>About Me</span>
       <div class="close" v-on:click="closeAboutMe()">X</div>
     </div>
-    <p id="blurb">Not only a dedicated software engineer with a passion for knowledge and creativity, but also an innovative problem solver with keen observation skills. An amicable person that will inspire confidence and curiosity amongst a team. I deliver performance driven by efficiency and adaptability. </p>
+    <p id="blurb">My mission is to empower a better planet through innovation and sustainability.
+      <br/>
+      <br/>
+
+      A dedicated engineer and entrepreneur passionate about transforming ideas into meaningful, technology-driven
+      solutions through diverse ways of thinking. With a background spanning software engineering, biological sciences,
+      and a growing expertise in aerospace systems, I thrive at the intersection of innovation and practicality, driving
+      progress through creativity, precision, and diverse ways of thinking. I combine analytical rigor with curiosity
+      and empathy inspiring confidence within teams and sparking collaboration that leads to real-world impact and a
+      more sustainable future.</p>
   </div>
 </template>
 
@@ -40,11 +49,11 @@ export default {
       this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px'
       this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
     },
-    closeDragElement () {
+    closeDragElement() {
       document.onmouseup = null
       document.onmousemove = null
     },
-    closeAboutMe () {
+    closeAboutMe() {
       document.querySelector('#aboutme-container').style.display = 'none'
     }
   }
@@ -62,43 +71,44 @@ export default {
   height: 12.42rem;
   width: 16rem;
   border: 2px solid;
-  background-color: rgb(192,192,192);
-  border-width:1px;
-  border-color:#FFFFFF #808080 #808080 #FFFFFF;
+  background-color: rgb(192, 192, 192);
+  border-width: 1px;
+  border-color: #FFFFFF #808080 #808080 #FFFFFF;
   resize: both;
   overflow: auto;
   font-family: 'VT323', monospace;
-  text-align:center;
+  text-align: center;
   display: none;
   justify-content: center;
   align-items: center;
   top: 25%;
   left: 25%;
 }
+
 #aboutme-header {
-  cursor:move;
+  cursor: move;
   z-index: 10;
   border: 1px solid black;
   color: white;
-  background-image: linear-gradient(90deg, rgb(0,0,123), black);
+  background-image: linear-gradient(90deg, rgb(0, 0, 123), black);
   display: flex;
   justify-content: space-between;
 }
 
 .close {
   border: 1px solid;
-  border-width:1px;
-  border-color:#FFFFFF #808080 #808080 #FFFFFF;
-  background-color: rgb(192,192,192);
+  border-width: 1px;
+  border-color: #FFFFFF #808080 #808080 #FFFFFF;
+  background-color: rgb(192, 192, 192);
   width: 3%;
 }
 
-.close:active{
-    border-color: #808080  #FFFFFF  #FFFFFF #808080;
+.close:active {
+  border-color: #808080 #FFFFFF #FFFFFF #808080;
 }
 
 #blurb {
   margin: 6.5%;
+  font-size: 1.2rem;
 }
-
 </style>

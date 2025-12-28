@@ -34,7 +34,8 @@ export default {
       const fixedPositions = {
         'cli': { left: '20%', top: '25%' },
         'cfd': { left: '30%', top: '25%' },
-        'airfoil': { left: '40%', top: '25%' }
+        'airfoil': { left: '40%', top: '25%' },
+        'resume': { left: '55%', top: '30%' }
       };
 
       const pos = fixedPositions[this.id];

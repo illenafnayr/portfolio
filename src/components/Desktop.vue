@@ -185,6 +185,7 @@ export default {
 #desktop {
   height: calc(100vh - 54px);
   width: 100vw;
+  // background-color: $color-background;
 }
 
 #title {
