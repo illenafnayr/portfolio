@@ -1,7 +1,7 @@
 <template>
   <div ref="draggableContainer" id="airfoil-container">
     <div id="airfoil-header" @mousedown="dragMouseDown">
-      <span>✈️ Airfoil Physics Simulator</span>
+      <span>Airfoil Physics Simulator</span>
       <div class="close" @click="closeAirfoil">X</div>
     </div>
     
@@ -557,20 +557,6 @@ export default {
   padding: 4px 8px;
   font-size: 16px;
   font-weight: bold;
-}
-
-.close {
-  border: 1px solid;
-  border-width: 1px;
-  border-color: #FFFFFF #808080 #808080 #FFFFFF;
-  background-color: rgb(192,192,192);
-  padding: 0 8px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.close:active {
-  border-color: #808080 #FFFFFF #FFFFFF #808080;
 }
 
 #airfoil-content {

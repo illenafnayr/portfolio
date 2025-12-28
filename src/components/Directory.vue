@@ -105,7 +105,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../styles/global.scss';
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
@@ -137,18 +137,6 @@ export default {
   background-image: linear-gradient(90deg, rgb(0, 0, 123), black);
   display: flex;
   justify-content: space-between;
-}
-
-.close {
-  border: 1px solid;
-  border-width: 1px;
-  border-color: #FFFFFF #808080 #808080 #FFFFFF;
-  background-color: rgb(192, 192, 192);
-  width: 3%;
-}
-
-.close:active {
-  border-color: #808080 #FFFFFF #FFFFFF #808080;
 }
 
 .directoryFiles-container {

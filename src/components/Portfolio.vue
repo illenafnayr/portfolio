@@ -105,18 +105,6 @@ export default {
   justify-content: space-between;
 }
 
-.close {
-  border: 1px solid;
-  border-width:1px;
-  border-color:#FFFFFF #808080 #808080 #FFFFFF;
-  background-color: rgb(192,192,192);
-  width: 3%;
-}
-
-.close:active{
-    border-color: #808080  #FFFFFF  #FFFFFF #808080;
-}
-
 #links {
   display: flex;
   flex-direction: column;

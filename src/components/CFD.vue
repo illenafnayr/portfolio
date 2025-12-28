@@ -258,13 +258,6 @@ export default {
     justify-content: space-between;
 }
 
-.close {
-    background: #c0c0c0;
-    border: 1px solid;
-    padding: 0 8px;
-    cursor: pointer;
-}
-
 #cfd-canvas {
     width: 600px;
     height: 240px;

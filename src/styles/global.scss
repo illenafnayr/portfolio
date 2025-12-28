@@ -3,3 +3,18 @@
 @import './mixins.scss';
 
 
+.close {
+    border: 1px solid;
+    border-width: 1px;
+    border-color: #FFFFFF #808080 #808080 #FFFFFF;
+    background-color: rgb(192, 192, 192);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close:active {
+    border-color: #808080 #FFFFFF #FFFFFF #808080;
+}

@@ -2,7 +2,7 @@
   <div ref="draggableContainer" id="game-selector-container">
     <div id="draggable-header" @mousedown="dragMouseDown">
       <span>Games!</span>
-      <div class="close" v-on:click="closeAboutMe()">X</div>
+      <div class="close" v-on:click="closeGameSelector()">X</div>
     </div>
 
     <!-- <label @click="playAlienAttack" class="button_faux">
@@ -19,8 +19,8 @@
 export default {
   name: "GameSelector",
   components: {},
-  created() {},
-  mounted() {},
+  created() { },
+  mounted() { },
   computed: {},
   data: () => {
     return {};
@@ -34,11 +34,14 @@ export default {
       console.log("Maze Game! 🐭");
       this.$router.push("/games/maze");
     },
+    closeGameSelector() {
+      document.querySelector('#game-selector-container').style.display = 'none'
+    },
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../../styles/global.scss';
 @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
@@ -61,6 +64,7 @@ export default {
   top: 25%;
   left: 25%;
 }
+
 #draggable-header {
   cursor: move;
   z-index: 10;
@@ -69,18 +73,6 @@ export default {
   background-image: linear-gradient(90deg, rgb(0, 0, 123), black);
   display: flex;
   justify-content: space-between;
-}
-
-.close {
-  border: 1px solid;
-  border-width: 1px;
-  border-color: #ffffff #808080 #808080 #ffffff;
-  background-color: rgb(192, 192, 192);
-  width: 3%;
-}
-
-.close:active {
-  border-color: #808080 #ffffff #ffffff #808080;
 }
 
 #blurb {

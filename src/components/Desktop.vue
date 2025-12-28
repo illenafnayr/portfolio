@@ -52,7 +52,7 @@
       @touchend="showResume()"
       @mousedown="startDrag($event)"
       @touchstart="startDrag($event)"/>
-    <Resume v-bind:style="{ display: isActive ? 'block' : 'none' }" />
+    <Resume />
 
     <Icon
       name="portfolio"

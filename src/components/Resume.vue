@@ -10,7 +10,7 @@
     <div id="resume-body">
       <!-- Header Info -->
       <div class="center">
-        <img src="../assets/me.jpeg" alt="My Smiling Face" id="myFace"></img>
+        <img src="../assets/me.jpeg" alt="My Smiling Face" id="myFace" />
         <h2>Ryan Fanelli</h2>
         <div class="contact-line">
           +1-(802)-275-7764 ·
@@ -25,17 +25,14 @@
       <section>
         <p><b>My mission is to empower a better planet through innovation and sustainability.</b></p>
         <p>
-          A dedicated engineer, aspiring pilot and entrepreneur passionate about sustainability and transforming ideas
-          into
+          A dedicated engineer, aspiring pilot and entrepreneur passionate about sustainability and transforming ideas into
           meaningful, technology-driven solutions. With a background spanning software engineering, biological sciences,
-          and a
-          growing expertise in aerospace systems and a particular passion for sustainable aviation, I thrive at the
-          intersection
-          of innovation and practicality, driving progress through creativity, precision, and diverse ways of thinking.
+          and a growing expertise in aerospace systems and a particular passion for sustainable aviation, I thrive at the
+          intersection of innovation and practicality, driving progress through creativity, precision, and diverse ways of
+          thinking.
         </p>
         <p>
-          I combine analytical rigor with curiosity and empathy, inspiring confidence within teams and sparking
-          collaboration
+          I combine analytical rigor with curiosity and empathy, inspiring confidence within teams and sparking collaboration
           that leads to real-world impact and a more sustainable future.
         </p>
       </section>
@@ -44,16 +41,17 @@
 
       <!-- EXPERIENCE -->
       <section>
-        <h3 @click="toggleSection('experience')">
-          Experience <span>{{ sectionsOpen.experience ? '▼' : '▲' }}</span>
+        <h3 @click="toggleSection('experience')" class="section-header">
+          Experience <span class="toggle-arrow">{{ sectionsOpen.experience ? '▲' : '▼' }}</span>
         </h3>
-        <div v-show="sectionsOpen.experience">
+        <div class="section-content" :class="{ collapsed: !sectionsOpen.experience }">
           <div class="item" v-for="exp in experiences" :key="exp.title">
-            <div class="item-content">
-              <div class="item-title">
-                {{ exp.title }}
-                <img v-if="exp.icon" :src="exp.iconUrl" class="item-icon" />
-              </div>
+            <div class="item-title" @click="toggleItem('experiences', exp.title, $event)">
+              {{ exp.title }}
+              <img v-if="exp.icon" :src="exp.iconUrl" class="item-icon" />
+              <span class="toggle-arrow">{{ itemOpen.experiences[exp.title] ? '▲' : '▼' }}</span>
+            </div>
+            <div class="item-content" :class="{ collapsed: !itemOpen.experiences[exp.title] }">
               <div class="item-meta">{{ exp.date }}</div>
               <div class="item-role">{{ exp.role }}</div>
               <p v-if="exp.description">{{ exp.description }}</p>
@@ -69,15 +67,17 @@
 
       <!-- EDUCATION -->
       <section>
-        <h3 @click="toggleSection('education')">
-          Education <span>{{ sectionsOpen.education ? '▼' : '▲' }}</span>
+        <h3 @click="toggleSection('education')" class="section-header">
+          Education <span class="toggle-arrow">{{ sectionsOpen.education ? '▲' : '▼' }}</span>
         </h3>
-        <div v-show="sectionsOpen.education">
+        <div class="section-content" :class="{ collapsed: !sectionsOpen.education }">
           <div class="item" v-for="edu in education" :key="edu.institution">
-            <div class="item-content">
-              <div class="item-title">{{ edu.institution }}
-                <img v-if="edu.icon" :src="edu.iconUrl" class="item-icon" :style="eduIconStyle(edu.institution)" />
-              </div>
+            <div class="item-title" @click="toggleItem('education', edu.institution, $event)">
+              {{ edu.institution }}
+              <img v-if="edu.icon" :src="edu.iconUrl" class="item-icon" :style="eduIconStyle(edu.institution)" />
+              <span class="toggle-arrow">{{ itemOpen.education[edu.institution] ? '▲' : '▼' }}</span>
+            </div>
+            <div class="item-content" :class="{ collapsed: !itemOpen.education[edu.institution] }">
               <div class="item-meta">{{ edu.date }}</div>
               <p v-if="edu.degree">{{ edu.degree }}</p>
               <p v-if="edu.note">{{ edu.note }}</p>
@@ -93,15 +93,17 @@
 
       <!-- CERTIFICATES -->
       <section>
-        <h3 @click="toggleSection('certificates')">
-          Certificates & Continuing Education <span>{{ sectionsOpen.certificates ? '▼' : '▲' }}</span>
+        <h3 @click="toggleSection('certificates')" class="section-header">
+          Certificates & Continuing Education <span class="toggle-arrow">{{ sectionsOpen.certificates ? '▲' : '▼' }}</span>
         </h3>
-        <div v-show="sectionsOpen.certificates">
+        <div class="section-content" :class="{ collapsed: !sectionsOpen.certificates }">
           <div class="item" v-for="cert in certificates" :key="cert.title">
-            <div class="item-content">
-              <div class="item-title">{{ cert.title }}
-                <img v-if="cert.icon" :src="cert.iconUrl" class="item-icon" :style="certIconStyle(cert.title)" />
-              </div>
+            <div class="item-title" @click="toggleItem('certificates', cert.title, $event)">
+              {{ cert.title }}
+              <img v-if="cert.icon" :src="cert.iconUrl" class="item-icon" :style="certIconStyle(cert.title)" />
+              <span class="toggle-arrow">{{ itemOpen.certificates[cert.title] ? '▲' : '▼' }}</span>
+            </div>
+            <div class="item-content" :class="{ collapsed: !itemOpen.certificates[cert.title] }">
               <div class="item-meta">{{ cert.date }}</div>
               <p v-if="cert.description">{{ cert.description }}</p>
             </div>
@@ -113,21 +115,18 @@
 
       <!-- TECHNICAL SKILLS -->
       <section>
-        <h3 @click="toggleSection('skills')">
-          Technical Skills <span>{{ sectionsOpen.skills ? '▼' : '▲' }}</span>
+        <h3 @click="toggleSection('skills')" class="section-header">
+          Technical Skills <span class="toggle-arrow">{{ sectionsOpen.skills ? '▲' : '▼' }}</span>
         </h3>
-        <div v-show="sectionsOpen.skills">
+        <div class="section-content" :class="{ collapsed: !sectionsOpen.skills }">
           <ul>
-            <li><b>Engineering & Analysis:</b> MATLAB, Simulink, SolidWorks, Fusion 360 (Basic), Nastran/Patran, ANSYS
-              Mechanical, ANSYS Fluent, XFOIL (learning)</li>
+            <li><b>Engineering & Analysis:</b> MATLAB, Simulink, SolidWorks, Fusion 360 (Basic), Nastran/Patran, ANSYS Mechanical, ANSYS Fluent, XFOIL (learning)</li>
             <li><b>Instrumentation & Prototyping:</b> Arduino, Raspberry Pi, sensors, data acquisition systems</li>
             <li><b>Programming & Data Science:</b> Python, R, Java, JavaScript</li>
             <li><b>Libraries:</b> NumPy, Pandas, Matplotlib, Seaborn, Scikit-learn, TensorFlow, Keras</li>
             <li><b>Mathematics & Statistics:</b> Calculus, Real Analysis, Linear Algebra, Statistics</li>
-            <li><b>Data Analysis & Visualization:</b> Data cleaning, exploratory data analysis, visualization,
-              regression, classification, clustering, basic neural networks</li>
-            <li><b>Scientific Computing:</b> Applying programming to simulation, modeling, and quantitative analysis
-            </li>
+            <li><b>Data Analysis & Visualization:</b> Data cleaning, exploratory data analysis, visualization, regression, classification, clustering, basic neural networks</li>
+            <li><b>Scientific Computing:</b> Applying programming to simulation, modeling, and quantitative analysis</li>
           </ul>
         </div>
       </section>
@@ -136,10 +135,10 @@
 
       <!-- LANGUAGES -->
       <section>
-        <h3 @click="toggleSection('languages')">
-          Languages <span>{{ sectionsOpen.languages ? '▼' : '▲' }}</span>
+        <h3 @click="toggleSection('languages')" class="section-header">
+          Languages <span class="toggle-arrow">{{ sectionsOpen.languages ? '▲' : '▼' }}</span>
         </h3>
-        <div v-show="sectionsOpen.languages">
+        <div class="section-content" :class="{ collapsed: !sectionsOpen.languages }">
           <ul>
             <li>English - Native</li>
             <li>Italiano - B1/B2</li>
@@ -152,10 +151,10 @@
 
       <!-- SOFT SKILLS / OTHER -->
       <section>
-        <h3 @click="toggleSection('softSkills')">
-          Soft Skills / Other <span>{{ sectionsOpen.softSkills ? '▼' : '▲' }}</span>
+        <h3 @click="toggleSection('softSkills')" class="section-header">
+          Soft Skills / Other <span class="toggle-arrow">{{ sectionsOpen.softSkills ? '▲' : '▼' }}</span>
         </h3>
-        <div v-show="sectionsOpen.softSkills">
+        <div class="section-content" :class="{ collapsed: !sectionsOpen.softSkills }">
           <ul>
             <li>Aviation Enthusiast</li>
             <li>Creative Thinking</li>
@@ -176,8 +175,7 @@
             <li>Word / Excel</li>
             <li>Linux OS</li>
             <li>Double Bass</li>
-            <li>Full Stack Development (TypeScript, Various Frameworks, Java/Spring, WordPress, System Design, DevOps,
-              etc.)</li>
+            <li>Full Stack Development (TypeScript, Various Frameworks, Java/Spring, WordPress, System Design, DevOps, etc.)</li>
           </ul>
         </div>
       </section>
@@ -272,7 +270,7 @@ export default {
           institution: "Berklee College of Music",
           date: "2015 - 2017",
           degree: "Jazz Composition & Double Bass Performance, 94 credits toward Bachelor of Music",
-          points: ["Dean's List", "Member of Berklee Contemporary Symphony Orchestra", "Toured with Professor Allen Levine’s Stämbandet", "Andrew Alden Ensemble - Guitar/Synthesizer/Sound Design"],
+          points: ["Dean's List", "Member of Berklee Contemporary Symphony Orchestra", "Toured with Professor Allen Levine's Stämbandet", "Andrew Alden Ensemble - Guitar/Synthesizer/Sound Design"],
           icon: "berklee-icon.png"
         }
       ],
@@ -304,19 +302,32 @@ export default {
         languages: true,
         softSkills: true
       },
+      itemOpen: {
+        experiences: {},
+        education: {},
+        certificates: {}
+      },
       positions: {}
     };
   },
   created() {
-    // Map assets to URLs using Vite's import.meta.glob
     const icons = import.meta.glob('@/assets/*', { eager: true, as: 'url' });
-
     const mapIcon = (iconName) => icons[`/src/assets/${iconName}`] || null;
 
-    // Attach URLs
-    this.experiences.forEach(exp => exp.iconUrl = mapIcon(exp.icon));
-    this.education.forEach(edu => edu.iconUrl = mapIcon(edu.icon));
-    this.certificates.forEach(cert => cert.iconUrl = mapIcon(cert.icon));
+    this.experiences.forEach(exp => {
+      exp.iconUrl = mapIcon(exp.icon);
+      this.itemOpen.experiences[exp.title] = true;
+    });
+
+    this.education.forEach(edu => {
+      edu.iconUrl = mapIcon(edu.icon);
+      this.itemOpen.education[edu.institution] = true;
+    });
+
+    this.certificates.forEach(cert => {
+      cert.iconUrl = mapIcon(cert.icon);
+      this.itemOpen.certificates[cert.title] = true;
+    });
   },
   methods: {
     dragMouseDown(event) {
@@ -343,21 +354,18 @@ export default {
     toggleSection(section) {
       this.sectionsOpen[section] = !this.sectionsOpen[section];
     },
+    toggleItem(section, key, event) {
+      if (event) event.stopPropagation();
+      this.itemOpen[section][key] = !this.itemOpen[section][key];
+    },
     eduIconStyle(institution) {
-      if (institution === "Politecnico di Torino") {
-        return { maxHeight: "70px" }; // bigger
-      } else if (institution === "Berklee College of Music") {
-        return { maxHeight: "30px" }; // smaller
-      } else {
-        return { maxHeight: "50px" }; // default
-      }
+      if (institution === "Politecnico di Torino") return { maxHeight: "70px" };
+      if (institution === "Berklee College of Music") return { maxHeight: "30px" };
+      return { maxHeight: "50px" };
     },
     certIconStyle(title) {
-      if (title.includes("MIT")) {
-        return { maxHeight: "110px" }; // make MIT icon bigger
-      } else {
-        return { maxHeight: "50px" }; // default size
-      }
+      if (title.includes("MIT")) return { maxHeight: "110px" };
+      return { maxHeight: "50px" };
     }
   }
 };
@@ -374,6 +382,7 @@ export default {
   border: 2px solid black;
   font-family: monospace;
   z-index: 10;
+  display: none;
 }
 
 #myFace {
@@ -396,6 +405,7 @@ export default {
 }
 
 #resume-body {
+  min-height: 100px;
   height: calc(100% - 32px);
   overflow-y: auto;
   padding: 1rem;
@@ -410,10 +420,34 @@ export default {
   margin-bottom: 0.25rem;
 }
 
+.section-header {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-arrow {
+  margin-left: 0.5rem;
+  font-size: 0.8em;
+}
+
+.section-content {
+  max-height: 5000px;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.section-content.collapsed {
+  max-height: 0;
+}
+
 .item {
   display: flex;
   gap: 0.75rem;
   margin-top: 1rem;
+  flex-direction: column;
 }
 
 .item-icon {
@@ -424,7 +458,14 @@ export default {
 }
 
 .item-content {
-  flex: 1;
+  max-height: 5000px;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  padding-left: 1rem;
+}
+
+.item-content.collapsed {
+  max-height: 0;
 }
 
 .item-title {
@@ -432,6 +473,8 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
 }
 
 .item-meta {
@@ -442,11 +485,6 @@ export default {
 .item-role {
   font-weight: bold;
   margin-bottom: 0.25rem;
-}
-
-h3 {
-  cursor: pointer;
-  user-select: none;
 }
 
 ul {
