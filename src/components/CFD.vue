@@ -1,7 +1,7 @@
 <template>
     <div ref="container" id="cfd-container">
         <div id="cfd-header" @mousedown="dragMouseDown">
-            <span>🌊 CFD Visualizer (Fake Physics)</span>
+            <span>🌊 CFD Simulator</span>
             <div class="close" @click="closeCFD">X</div>
         </div>
 

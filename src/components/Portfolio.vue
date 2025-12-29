@@ -21,14 +21,31 @@
       </div>
       <hr width="95%">
 
+      <!-- Hydrogen NOx Research -->
+      <div class="project-section">
+        <h3>Review of NOx Formation and Mitigation Strategies in Hydrogen Combustion Engines</h3>
+        <p>Analysis of Hydrogen Combustion Mechanisms and Strategies for
+          Low NOx Emission</p>
+        <div class="document-preview">
+          <div class="pdf-icon">📄</div>
+          <a :href="nOxReductionPdfUrl2" target="_blank" class="doc-link">
+            View Document (PDF)
+          </a>
+        </div>
+        <div class="project-details">
+          <span>Analysis & literature review</span>
+        </div>
+      </div>
+      <hr width="95%">
+
       <!-- Hydrogen Fuel Cell VTOL -->
       <div class="project-section">
         <h3>Hydrogen Fuel Cell VTOL Concept</h3>
         <p>Conceptual design study for a hydrogen-powered vertical takeoff and landing aircraft</p>
         <div class="document-preview">
           <div class="pdf-icon">📄</div>
-          <a :href="pdfUrl" target="_blank" class="doc-link">
-            View Design Document (PDF)
+          <a :href="h2vtolPdfUrl" target="_blank" class="doc-link">
+            View Document (PDF)
           </a>
         </div>
         <div class="project-details">
@@ -82,7 +99,8 @@ import rcPlane1 from '@/assets/rcplane1.png'
 import rcPlane2 from '@/assets/rcplane2.png'
 import rcPlane3 from '@/assets/rcplane3.png'
 import rcPlane4 from '@/assets/rcplane4.png'
-import pdfUrl from '@/assets/Hydrogen_Fuel_Cell_VTOL_RC_Aircraft.pdf'
+import h2vtolPdfUrl from '@/assets/Hydrogen_Fuel_Cell_VTOL_RC_Aircraft.pdf'
+import nOxReductionPdfUrl2 from '@/assets/NOx_Reduction_Research.pdf'
 
 export default {
   name: 'Portfolio',
@@ -97,7 +115,8 @@ export default {
       enlargedImage: null,
       imageLoading: false,
       modelLoaded: false,
-      pdfUrl: pdfUrl,
+      h2vtolPdfUrl: h2vtolPdfUrl,
+      nOxReductionPdfUrl2: nOxReductionPdfUrl2,
       rcPlane1: rcPlane1,
       rcPlane2: rcPlane2,
       rcPlane3: rcPlane3,
@@ -121,25 +140,25 @@ export default {
       this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px'
       this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
     },
-    closeDragElement () {
+    closeDragElement() {
       document.onmouseup = null
       document.onmousemove = null
     },
-    closeAboutMe () {
+    closeAboutMe() {
       document.querySelector('#portfolio-container').style.display = 'none'
     },
-    openImage (imageSrc) {
+    openImage(imageSrc) {
       this.imageLoading = true
       this.enlargedImage = imageSrc
     },
-    closeImage () {
+    closeImage() {
       this.enlargedImage = null
       this.imageLoading = false
     },
-    onImageLoad () {
+    onImageLoad() {
       this.imageLoading = false
     },
-    load3DModel () {
+    load3DModel() {
       // Placeholder for Three.js model loading
       // You'll need to implement this with your actual .obj/.stl file from OpenVSP
       this.modelLoaded = true
@@ -161,7 +180,7 @@ export default {
   max-width: 800px;
   min-width: 400px;
   border: 2px solid;
-  background-color: rgb(192,192,192);
+  background-color: rgb(192, 192, 192);
   border-width: 1px;
   border-color: #FFFFFF #808080 #808080 #FFFFFF;
   resize: both;
@@ -177,7 +196,7 @@ export default {
   z-index: 10;
   border: 1px solid black;
   color: white;
-  background-image: linear-gradient(90deg, rgb(0,0,123), black);
+  background-image: linear-gradient(90deg, rgb(0, 0, 123), black);
   display: flex;
   justify-content: space-between;
   padding: 5px 10px;
@@ -198,7 +217,7 @@ export default {
 .project-section h3 {
   margin: 10px 0;
   font-size: 1.5rem;
-  color: rgb(0,0,123);
+  color: rgb(0, 0, 123);
 }
 
 .project-section p {
@@ -225,7 +244,7 @@ export default {
 
 .project-image:hover {
   transform: scale(1.05);
-  border-color: rgb(0,0,123);
+  border-color: rgb(0, 0, 123);
 }
 
 .document-preview {
@@ -234,7 +253,7 @@ export default {
   align-items: center;
   gap: 10px;
   padding: 20px;
-  background-color: rgb(220,220,220);
+  background-color: rgb(220, 220, 220);
   border: 1px solid #808080;
   margin: 15px auto;
   max-width: 300px;
@@ -245,17 +264,17 @@ export default {
 }
 
 .doc-link {
-  color: rgb(0,0,123);
+  color: rgb(0, 0, 123);
   text-decoration: none;
   font-size: 1.2rem;
   padding: 8px 16px;
-  border: 2px solid rgb(0,0,123);
-  background-color: rgb(192,192,192);
+  border: 2px solid rgb(0, 0, 123);
+  background-color: rgb(192, 192, 192);
   border-color: #FFFFFF #808080 #808080 #FFFFFF;
 }
 
 .doc-link:hover {
-  background-color: rgb(0,0,123);
+  background-color: rgb(0, 0, 123);
   color: white;
 }
 
@@ -266,7 +285,7 @@ export default {
 .model-display {
   width: 100%;
   height: 300px;
-  background-color: rgb(220,220,220);
+  background-color: rgb(220, 220, 220);
   border: 2px solid #808080;
   display: flex;
   align-items: center;
@@ -284,7 +303,7 @@ export default {
   font-family: 'VT323', monospace;
   font-size: 1.2rem;
   padding: 10px 20px;
-  background-color: rgb(192,192,192);
+  background-color: rgb(192, 192, 192);
   border: 2px solid;
   border-color: #FFFFFF #808080 #808080 #FFFFFF;
   cursor: pointer;
@@ -312,18 +331,18 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: rgb(0,0,123);
+  color: rgb(0, 0, 123);
   text-decoration: none;
   font-size: 1.2rem;
   padding: 8px 16px;
-  border: 2px solid rgb(192,192,192);
+  border: 2px solid rgb(192, 192, 192);
   border-color: #FFFFFF #808080 #808080 #FFFFFF;
   min-width: 250px;
   justify-content: center;
 }
 
 .portfolio-link:hover {
-  background-color: rgb(0,0,123);
+  background-color: rgb(0, 0, 123);
   color: white;
 }
 
