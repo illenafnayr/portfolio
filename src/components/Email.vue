@@ -24,7 +24,7 @@
             </div>
           </div>
           <button type="submit" id="send">
-            <img src="../assets/Letter.png" alt="send">
+            <img src="/images/Letter.png" alt="send">
             <span>Send</span>
           </button>
         </div>

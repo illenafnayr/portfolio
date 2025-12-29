@@ -5,7 +5,7 @@
 
 			<p class="instructions">Use W / A / S / D keys to move!</p>
 			<p class="instructions">Find all of the Special walls with ducks on them, walk through them to turn them back to bricks. After finding all of them you win!</p>
-			<button @click="goHome" class="back-button">Back to Home</button>
+			<button @click="goHome" class="back-button">Exit To Desktop</button>
 		</div>
 	</div>
 </template>

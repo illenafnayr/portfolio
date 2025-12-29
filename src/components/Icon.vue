@@ -126,7 +126,7 @@ export default {
       document.onmousemove = null;
     },
     getImageUrl() {
-      return new URL(`../assets/${this.filename}`, import.meta.url).href;
+      return `/images/${this.filename}`;
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div id="kitty-container">
-    <img src="../assets/cyancat.gif" alt="not my problem, it's yours" id="kitty">
+    <img src="/images/cyancat.gif" alt="not my problem, it's yours" id="kitty">
   </div>
 </template>
 

@@ -6,51 +6,51 @@
 
     <div id="appList">
       <div class="block" v-on:click="showAirfoil()">
-        <img src="../assets/airfoil-icon.png" alt="Airfoil Simulator" class="icon no-invert" />
+        <img src="/images/airfoil-icon.png" alt="Airfoil Simulator" class="icon no-invert" />
         <span>Airfoil Simulator</span>
       </div>
       <div class="block" v-on:click="showCFD()">
-        <img src="../assets/cfd-icon.png" alt="CFD SImulator" class="icon no-invert" />
+        <img src="/images/cfd-icon.png" alt="CFD SImulator" class="icon no-invert" />
         <span>CFD Simulator</span>
       </div>
       <div class="block" v-on:click="showCLI()">
-        <img src="../assets/cli.png" alt="CMD Prompt" class="icon no-invert" />
+        <img src="/images/cli.png" alt="CMD Prompt" class="icon no-invert" />
         <span>CMD Prompt</span>
       </div>
       <div class="block" v-on:click="showEmail()">
-        <img src="../assets/Mail.png" alt="Email" class="icon no-invert" />
+        <img src="/images/Mail.png" alt="Email" class="icon no-invert" />
         <span>Email</span>
       </div>
 
       <div class="block">
         <a class="container block" href="https://github.com/illenafnayr" target="_blank">
-          <img src="../assets/github-logo.png" alt="Git Hub" class="icon" />
+          <img src="/images/github-logo.png" alt="Git Hub" class="icon" />
           <span>Git Hub</span>
         </a>
       </div>
 
       <div class="block">
         <a class="container block" href="https://www.linkedin.com/in/ryan-fanelli/" target="_blank">
-        <img src="../assets/linkedin-logo.png" alt="Git Hub" class="icon" />
-        <span>LinkedIn</span>
+          <img src="/images/linkedin-logo.png" alt="Git Hub" class="icon" />
+          <span>LinkedIn</span>
         </a>
       </div>
 
       <div class="block" v-on:click="showPortfolio()">
-        <img src="../assets/DocumentsFolder.png" alt="Portfolio" class="icon no-invert" />
+        <img src="/images/DocumentsFolder.png" alt="Portfolio" class="icon no-invert" />
         <span>Portfolio</span>
       </div>
       <hr />
       <!-- Suspend -->
-      <div class="block">
-        <img src="../assets/Starfield.png" alt="Portfolio" class="icon no-invert" />
+      <div class="block" v-on:click="startScreenSaver">
+        <img src="/images/Starfield.png" alt="Portfolio" class="icon no-invert" />
         <span>Suspend</span>
       </div>
 
       <!-- Shut Down -->
       <a href="https://www.google.com" class="block">
         <div class="container block">
-          <img src="../assets/Power-down.png" alt="Portfolio" class="icon no-invert" />
+          <img src="/images/Power-down.png" alt="Portfolio" class="icon no-invert" />
           <span>Shut Down</span>
         </div>
       </a>
@@ -84,6 +84,9 @@ export default {
     showAirfoil() {
       document.querySelector('#airfoil-container').style.display = "block";
     },
+    startScreenSaver() {
+      this.$emit("activate-screensaver");
+    }
   },
 };
 </script>

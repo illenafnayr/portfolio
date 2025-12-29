@@ -10,7 +10,7 @@
     <div id="resume-body">
       <!-- Header Info -->
       <div class="center">
-        <img src="../assets/me.jpeg" alt="My Smiling Face" id="myFace" />
+        <img src="/images/me.jpeg" alt="My Smiling Face" id="myFace" />
         <h2>Ryan Fanelli</h2>
         <div class="contact-line">
           +1-(802)-275-7764 ·
@@ -25,14 +25,18 @@
       <section>
         <p><b>My mission is to empower a better planet through innovation and sustainability.</b></p>
         <p>
-          A dedicated engineer, aspiring pilot and entrepreneur passionate about sustainability and transforming ideas into
+          A dedicated engineer, aspiring pilot and entrepreneur passionate about sustainability and transforming ideas
+          into
           meaningful, technology-driven solutions. With a background spanning software engineering, biological sciences,
-          and a growing expertise in aerospace systems and a particular passion for sustainable aviation, I thrive at the
-          intersection of innovation and practicality, driving progress through creativity, precision, and diverse ways of
+          and a growing expertise in aerospace systems and a particular passion for sustainable aviation, I thrive at
+          the
+          intersection of innovation and practicality, driving progress through creativity, precision, and diverse ways
+          of
           thinking.
         </p>
         <p>
-          I combine analytical rigor with curiosity and empathy, inspiring confidence within teams and sparking collaboration
+          I combine analytical rigor with curiosity and empathy, inspiring confidence within teams and sparking
+          collaboration
           that leads to real-world impact and a more sustainable future.
         </p>
       </section>
@@ -94,7 +98,8 @@
       <!-- CERTIFICATES -->
       <section>
         <h3 @click="toggleSection('certificates')" class="section-header">
-          Certificates & Continuing Education <span class="toggle-arrow">{{ sectionsOpen.certificates ? '▲' : '▼' }}</span>
+          Certificates & Continuing Education <span class="toggle-arrow">{{ sectionsOpen.certificates ? '▲' : '▼'
+            }}</span>
         </h3>
         <div class="section-content" :class="{ collapsed: !sectionsOpen.certificates }">
           <div class="item" v-for="cert in certificates" :key="cert.title">
@@ -120,13 +125,16 @@
         </h3>
         <div class="section-content" :class="{ collapsed: !sectionsOpen.skills }">
           <ul>
-            <li><b>Engineering & Analysis:</b> MATLAB, Simulink, SolidWorks, Fusion 360 (Basic), Nastran/Patran, ANSYS Mechanical, ANSYS Fluent, XFOIL (learning)</li>
+            <li><b>Engineering & Analysis:</b> MATLAB, Simulink, SolidWorks, Fusion 360 (Basic), Nastran/Patran, ANSYS
+              Mechanical, ANSYS Fluent, XFOIL (learning)</li>
             <li><b>Instrumentation & Prototyping:</b> Arduino, Raspberry Pi, sensors, data acquisition systems</li>
             <li><b>Programming & Data Science:</b> Python, R, Java, JavaScript</li>
             <li><b>Libraries:</b> NumPy, Pandas, Matplotlib, Seaborn, Scikit-learn, TensorFlow, Keras</li>
             <li><b>Mathematics & Statistics:</b> Calculus, Real Analysis, Linear Algebra, Statistics</li>
-            <li><b>Data Analysis & Visualization:</b> Data cleaning, exploratory data analysis, visualization, regression, classification, clustering, basic neural networks</li>
-            <li><b>Scientific Computing:</b> Applying programming to simulation, modeling, and quantitative analysis</li>
+            <li><b>Data Analysis & Visualization:</b> Data cleaning, exploratory data analysis, visualization,
+              regression, classification, clustering, basic neural networks</li>
+            <li><b>Scientific Computing:</b> Applying programming to simulation, modeling, and quantitative analysis
+            </li>
           </ul>
         </div>
       </section>
@@ -175,7 +183,8 @@
             <li>Word / Excel</li>
             <li>Linux OS</li>
             <li>Double Bass</li>
-            <li>Full Stack Development (TypeScript, Various Frameworks, Java/Spring, WordPress, System Design, DevOps, etc.)</li>
+            <li>Full Stack Development (TypeScript, Various Frameworks, Java/Spring, WordPress, System Design, DevOps,
+              etc.)</li>
           </ul>
         </div>
       </section>
@@ -311,8 +320,8 @@ export default {
     };
   },
   created() {
-    const icons = import.meta.glob('@/assets/*', { eager: true, as: 'url' });
-    const mapIcon = (iconName) => icons[`/src/assets/${iconName}`] || null;
+    const mapIcon = (iconName) =>
+      iconName ? `/images/${iconName}` : null;
 
     this.experiences.forEach(exp => {
       exp.iconUrl = mapIcon(exp.icon);

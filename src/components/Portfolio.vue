@@ -95,12 +95,12 @@
 </template>
 
 <script>
-import rcPlane1 from '@/assets/rcplane1.png'
-import rcPlane2 from '@/assets/rcplane2.png'
-import rcPlane3 from '@/assets/rcplane3.png'
-import rcPlane4 from '@/assets/rcplane4.png'
-import h2vtolPdfUrl from '@/assets/Hydrogen_Fuel_Cell_VTOL_RC_Aircraft.pdf'
-import nOxReductionPdfUrl2 from '@/assets/NOx_Reduction_Research.pdf'
+import rcPlane1 from '/images/rcplane1.png'
+import rcPlane2 from '/images/rcplane2.png'
+import rcPlane3 from '/images/rcplane3.png'
+import rcPlane4 from '/images/rcplane4.png'
+import h2vtolPdfUrl from '/images/Hydrogen_Fuel_Cell_VTOL_RC_Aircraft.pdf'
+import nOxReductionPdfUrl2 from '/images/NOx_Reduction_Research.pdf'
 
 export default {
   name: 'Portfolio',

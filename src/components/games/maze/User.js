@@ -1,7 +1,7 @@
 import { Maze } from "./Maze.js"
-import brickTexture from '@/assets/bricks-texture.jpg';
-import specialWallTexture from '@/assets/special-wall.png';
-import winTexture from '@/assets/you-won.png';
+import brickTexture from '/images/bricks-texture.jpg';
+import specialWallTexture from '/images/special-wall.png';
+import winTexture from '/images/you-won.png';
 
 export class User {
 	constructor(width, height, ctx) {
