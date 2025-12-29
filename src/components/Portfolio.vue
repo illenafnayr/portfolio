@@ -5,6 +5,24 @@
       <div class="close" v-on:click="closeAboutMe()">X</div>
     </div>
     <div id="portfolio-content">
+      <!-- 3D Aircraft Model Viewer -->
+      <div class="project-section">
+        <h3>Glider Design & Optimization Project</h3>
+        <p>Full-cycle aerodynamic design study from CAD modeling through CFD analysis to physical prototype</p>
+        <div class="model-viewer-container">
+          <div id="model-viewer" class="model-display">
+            <button @click="load3DModel" class="load-model-btn">Load 3D Model</button>
+            <canvas ref="modelCanvas" id="model-canvas"></canvas>
+          </div>
+        </div>
+        <div class="project-details">
+          <span><strong>Current:</strong> OpenVSP parametric design</span><br>
+          <span><strong>Next Steps:</strong> Detailed design in SolidWorks → CFD validation → 3D printed prototyping and
+            testing</span>
+        </div>
+      </div>
+      <hr width="95%">
+
       <!-- RC Plane Project -->
       <div class="project-section">
         <h3>Custom RC Aircraft Build</h3>
@@ -54,22 +72,6 @@
       </div>
       <hr width="95%">
 
-      <!-- 3D Aircraft Model Viewer -->
-      <div class="project-section">
-        <h3>Aircraft Design Concepts</h3>
-        <p>3D visualization of aircraft design studies</p>
-        <div class="model-viewer-container">
-          <div id="model-viewer" class="model-display">
-            <button @click="load3DModel" class="load-model-btn">Load 3D Model</button>
-            <canvas ref="modelCanvas" id="model-canvas"></canvas>
-          </div>
-        </div>
-        <div class="project-details">
-          <span>OpenVSP conceptual design models</span>
-        </div>
-      </div>
-      <hr width="95%">
-
       <!-- GitHub & Additional Links -->
       <div class="project-section">
         <h3>Additional Work</h3>
@@ -101,6 +103,8 @@ import rcPlane3 from '/images/rcplane3.png'
 import rcPlane4 from '/images/rcplane4.png'
 import h2vtolPdfUrl from '/images/Hydrogen_Fuel_Cell_VTOL_RC_Aircraft.pdf'
 import nOxReductionPdfUrl2 from '/images/NOx_Reduction_Research.pdf'
+import * as THREE from 'three';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
 export default {
   name: 'Portfolio',
@@ -159,11 +163,153 @@ export default {
       this.imageLoading = false
     },
     load3DModel() {
-      // Placeholder for Three.js model loading
-      // You'll need to implement this with your actual .obj/.stl file from OpenVSP
-      this.modelLoaded = true
-      console.log('Load 3D model from OpenVSP export')
-      // Example implementation would use Three.js OBJLoader or STLLoader
+      if (this.modelLoaded) return;
+
+      const canvas = this.$refs.modelCanvas;
+      const container = canvas.parentElement;
+
+      // Hide button, show canvas
+      container.querySelector('.load-model-btn').style.display = 'none';
+      canvas.style.display = 'block';
+
+      // Scene setup
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xdcdcdc);
+
+      // Camera
+      const camera = new THREE.PerspectiveCamera(
+        45,
+        container.clientWidth / container.clientHeight,
+        0.1,
+        1000
+      );
+      camera.position.set(5, 5, 5);
+      camera.lookAt(0, 0, 0);
+
+      // Renderer
+      const renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        antialias: true
+      });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+
+      const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight1.position.set(5, 10, 7);
+      scene.add(directionalLight1);
+
+      const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
+      directionalLight2.position.set(-5, 5, -5);
+      scene.add(directionalLight2);
+
+      // Load model (STL format)
+      const loader = new STLLoader();
+      const modelPath = '/models/glider.stl';
+
+      loader.load(
+        modelPath,
+        (geometry) => {
+          // Center and scale the geometry
+          geometry.center();
+          geometry.computeVertexNormals();
+
+          // Create material
+          const material = new THREE.MeshPhongMaterial({
+            color: 0x0000ff,
+            specular: 0x111111,
+            shininess: 200,
+            flatShading: false
+          });
+
+          // Create mesh
+          const mesh = new THREE.Mesh(geometry, material);
+
+          // Rotate to get proper orientation (OpenVSP coordinate system)
+          mesh.rotation.x = -Math.PI / 2;
+
+          // Flip upside-down model
+          mesh.rotation.z = Math.PI;
+
+          // Scale to fit view (adjust as needed)
+          const box = new THREE.Box3().setFromObject(mesh);
+          const size = box.getSize(new THREE.Vector3());
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const scale = 8 / maxDim;
+          mesh.scale.setScalar(scale);
+
+          scene.add(mesh);
+
+          // Animation loop
+          let isDragging = false;
+          let previousMousePosition = { x: 0, y: 0 };
+
+          // Mouse controls for rotation
+          canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            previousMousePosition = { x: e.clientX, y: e.clientY };
+          });
+
+          canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+              const deltaX = e.clientX - previousMousePosition.x;
+              const deltaY = e.clientY - previousMousePosition.y;
+
+              mesh.rotation.y += deltaX * 0.01;
+              mesh.rotation.x += deltaY * 0.01;
+
+              previousMousePosition = { x: e.clientX, y: e.clientY };
+            }
+          });
+
+          canvas.addEventListener('mouseup', () => {
+            isDragging = false;
+          });
+
+          canvas.addEventListener('mouseleave', () => {
+            isDragging = false;
+          });
+
+          // Zoom with mouse wheel
+          canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const delta = e.deltaY * 0.01;
+            camera.position.z += delta;
+            camera.position.z = Math.max(5, Math.min(30, camera.position.z));
+          });
+
+          // Auto-rotation
+          const animate = () => {
+            requestAnimationFrame(animate);
+
+            if (!isDragging) {
+              mesh.rotation.y += 0.003;
+            }
+
+            renderer.render(scene, camera);
+          };
+
+          animate();
+          this.modelLoaded = true;
+        },
+        (xhr) => {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        (error) => {
+          console.error('Error loading model:', error);
+          alert('Failed to load 3D model. Please check the file path.');
+        }
+      );
+
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
     }
   }
 }

@@ -1,17 +1,25 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import path from "path";
+import { fileURLToPath } from "url";
+import { imageToWebpPlugin } from 'vite-plugin-image-to-webp';
 
 // Convert import.meta.url to __dirname equivalent
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    imageToWebpPlugin({
+      imageFormats: ["jpg", "jpeg", "png"],
+      webpQuality: { quality: 80 },
+      destinationFolder: "dist",
+    }),
+  ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   css: {
