@@ -53,8 +53,6 @@ export default {
   },
 
   mounted() {
-    this.ensureWithinBounds()
-    window.addEventListener('resize', this.onResize)
     this.animate()
   },
 
@@ -62,7 +60,6 @@ export default {
     if (this.animationId) {
       cancelAnimationFrame(this.animationId)
     }
-    window.removeEventListener('resize', this.onResize)
   },
 
   methods: {
@@ -89,25 +86,7 @@ export default {
         this.position.y = Math.max(0, Math.min(this.position.y, maxY))
       }
 
-      this.animationId = requestAnimationFrame(() => this.animate())
-    },
-
-    ensureWithinBounds() {
-      const container = document.getElementById('screen-saver-container')
-      if (!container) return
-      const logoEl = container.querySelector('.logo')
-      const logoW = logoEl ? logoEl.offsetWidth : this.logoWidth
-      const logoH = logoEl ? logoEl.offsetHeight : this.logoHeight
-      const maxX = Math.max(0, container.clientWidth - logoW)
-      const maxY = Math.max(0, container.clientHeight - logoH)
-
-      this.position.x = Math.max(0, Math.min(this.position.x, maxX))
-      this.position.y = Math.max(0, Math.min(this.position.y, maxY))
-    },
-
-    onResize() {
-      // Recalculate bounds and keep logo visible on viewport changes
-      this.ensureWithinBounds()
+      this.animationId = requestAnimationFrame(this.animate)
     },
 
     changeColor() {
