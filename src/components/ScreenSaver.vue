@@ -27,7 +27,7 @@ export default {
       ],
       currentColorIndex: 0,
       logoWidth: 240,
-      logoHeight: 120,
+        logoHeight: 120,
       animationId: null
     }
   },
@@ -65,8 +65,11 @@ export default {
   methods: {
     animate() {
       const container = document.getElementById('screen-saver-container')
-      const maxX = container.clientWidth - this.logoWidth
-      const maxY = container.clientHeight - this.logoHeight
+      const logoEl = container.querySelector('.logo')
+      const logoW = logoEl ? logoEl.offsetWidth : this.logoWidth
+      const logoH = logoEl ? logoEl.offsetHeight : this.logoHeight
+      const maxX = Math.max(0, container.clientWidth - logoW)
+      const maxY = Math.max(0, container.clientHeight - logoH)
 
       this.position.x += this.velocity.x
       this.position.y += this.velocity.y
@@ -136,8 +139,9 @@ export default {
 /* LOGO FRAME */
 .logo {
   position: absolute;
-  width: 240px;
-  height: 120px;
+  width: min(60vw, 240px);
+  aspect-ratio: 2 / 1;
+  height: auto;
 
   border: 3px solid;
   background-color: #000;
@@ -163,7 +167,7 @@ export default {
 
 /* TEXT */
 .logo-text {
-  font-size: 32px;
+  font-size: clamp(18px, 4vw, 32px);
   letter-spacing: 3px;
   text-transform: uppercase;
 

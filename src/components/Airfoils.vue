@@ -1,6 +1,6 @@
 <template>
   <div ref="draggableContainer" id="airfoil-container">
-    <div id="airfoil-header" @mousedown="dragMouseDown">
+    <div id="airfoil-header" @mousedown="dragMouseDown" @touchstart="dragMouseDown">
       <span>Airfoil Physics Simulator</span>
       <div class="close" @click="closeAirfoil">X</div>
     </div>
@@ -214,23 +214,29 @@ export default {
   methods: {
     dragMouseDown(event) {
       event.preventDefault();
-      this.positions.clientX = event.clientX;
-      this.positions.clientY = event.clientY;
+      const client = event.touches ? event.touches[0] : event;
+      this.positions.clientX = client.clientX;
+      this.positions.clientY = client.clientY;
       document.onmousemove = this.elementDrag;
       document.onmouseup = this.closeDragElement;
+      document.ontouchmove = this.elementDrag;
+      document.ontouchend = this.closeDragElement;
     },
     elementDrag(event) {
       event.preventDefault();
-      this.positions.movementX = this.positions.clientX - event.clientX;
-      this.positions.movementY = this.positions.clientY - event.clientY;
-      this.positions.clientX = event.clientX;
-      this.positions.clientY = event.clientY;
+      const client = event.touches ? event.touches[0] : event;
+      this.positions.movementX = this.positions.clientX - client.clientX;
+      this.positions.movementY = this.positions.clientY - client.clientY;
+      this.positions.clientX = client.clientX;
+      this.positions.clientY = client.clientY;
       this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px';
       this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px';
     },
     closeDragElement() {
       document.onmouseup = null;
       document.onmousemove = null;
+      document.ontouchmove = null;
+      document.ontouchend = null;
     },
     closeAirfoil() {
       this.$refs.draggableContainer.style.display = 'none';

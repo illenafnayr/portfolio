@@ -1,6 +1,6 @@
 <template>
   <div ref="draggableContainer" class="directory-container" :id="`${id}-directory-container`">
-    <div class="directory-header" @mousedown="dragMouseDown">
+    <div class="directory-header" @mousedown="dragMouseDown" @touchstart="dragMouseDown">
       <span>C: _/{{ name }}</span>
       <div class="close" v-on:click="close()">X</div>
     </div>
@@ -67,25 +67,29 @@ export default {
   methods: {
     dragMouseDown: function (event) {
       event.preventDefault()
-      // get the mouse cursor position at startup:
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
+      const client = event.touches ? event.touches[0] : event
+      this.positions.clientX = client.clientX
+      this.positions.clientY = client.clientY
       document.onmousemove = this.elementDrag
       document.onmouseup = this.closeDragElement
+      document.ontouchmove = this.elementDrag
+      document.ontouchend = this.closeDragElement
     },
     elementDrag: function (event) {
       event.preventDefault()
-      this.positions.movementX = this.positions.clientX - event.clientX
-      this.positions.movementY = this.positions.clientY - event.clientY
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
-      // set the element's new position:
+      const client = event.touches ? event.touches[0] : event
+      this.positions.movementX = this.positions.clientX - client.clientX
+      this.positions.movementY = this.positions.clientY - client.clientY
+      this.positions.clientX = client.clientX
+      this.positions.clientY = client.clientY
       this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px'
       this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
     },
     closeDragElement() {
       document.onmouseup = null
       document.onmousemove = null
+      document.ontouchmove = null
+      document.ontouchend = null
     },
     close() {
       document.querySelector(`#${this.id}-directory-container`).style.display = 'none'

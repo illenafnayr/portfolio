@@ -1,6 +1,6 @@
 <template>
   <div ref="draggableContainer" id="cli-container">
-    <div id="cli-header" @mousedown="dragMouseDown">
+    <div id="cli-header" @mousedown="dragMouseDown" @touchstart="dragMouseDown">
       <span>command prompt</span>
       <div class="close" v-on:click="closeCLI()">X</div>
     </div>
@@ -30,25 +30,29 @@ export default {
   methods: {
     dragMouseDown: function (event) {
       event.preventDefault()
-      // get the mouse cursor position at startup:
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
+      const client = event.touches ? event.touches[0] : event
+      this.positions.clientX = client.clientX
+      this.positions.clientY = client.clientY
       document.onmousemove = this.elementDrag
       document.onmouseup = this.closeDragElement
+      document.ontouchmove = this.elementDrag
+      document.ontouchend = this.closeDragElement
     },
     elementDrag: function (event) {
       event.preventDefault()
-      this.positions.movementX = this.positions.clientX - event.clientX
-      this.positions.movementY = this.positions.clientY - event.clientY
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
-      // set the element's new position:
+      const client = event.touches ? event.touches[0] : event
+      this.positions.movementX = this.positions.clientX - client.clientX
+      this.positions.movementY = this.positions.clientY - client.clientY
+      this.positions.clientX = client.clientX
+      this.positions.clientY = client.clientY
       this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px'
       this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
     },
     closeDragElement() {
       document.onmouseup = null
       document.onmousemove = null
+      document.ontouchmove = null
+      document.ontouchend = null
     },
     closeCLI() {
       document.querySelector('#cli-container').style.display = 'none'
@@ -150,19 +154,6 @@ export default {
   background-image: linear-gradient(90deg, rgb(0, 0, 123), black);
   display: flex;
   justify-content: space-between;
-}
-
-.close {
-  border: 1px solid;
-  border-width: 1px;
-  border-color: #FFFFFF #808080 #808080 #FFFFFF;
-  background-color: rgb(192, 192, 192);
-  width: 3%;
-  text-align: center;
-}
-
-.close:active {
-  border-color: #808080 #FFFFFF #FFFFFF #808080;
 }
 
 #command {

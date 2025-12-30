@@ -100,7 +100,7 @@ export default {
   position: absolute;
   left: 1.5px;
   bottom: 38px;
-  width: 200px;
+  width: min(90vw, 200px);
   height: 310px;
   background-color: rgb(191, 191, 191);
   border: 1px solid black;
@@ -176,7 +176,7 @@ hr {
 /* Standardized icon styling */
 .icon {
   width: 30px;
-  height: 3opx;
+  height: 30px;
   object-fit: contain;
   margin-left: 5%;
   margin-right: 4%;

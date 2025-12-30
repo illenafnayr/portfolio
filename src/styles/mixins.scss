@@ -1,0 +1,20 @@
+@use './variables' as vars;
+@use 'sass:map';
+
+@mixin respond($breakpoint) {
+	$size: map.get(vars.$breakpoints, $breakpoint);
+	@if $size {
+		@media (min-width: $size) {
+			@content;
+		}
+	} @else {
+		@warn "No breakpoint `#{$breakpoint}` found in $breakpoints";
+	}
+}
+
+@mixin visually-hidden() {
+	position: absolute !important;
+	height: 1px; width: 1px;
+	overflow: hidden; clip: rect(1px, 1px, 1px, 1px);
+	white-space: nowrap; border: 0; padding: 0; margin: -1px;
+}

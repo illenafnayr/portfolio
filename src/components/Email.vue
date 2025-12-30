@@ -1,7 +1,7 @@
 <template>
   <div ref="draggableContainer" id="email-container">
     <!-- WINDOW HEADER -->
-    <div id="email-header" @mousedown="dragMouseDown">
+    <div id="email-header" @mousedown="dragMouseDown" @touchstart="dragMouseDown">
       <div class="title">
         <img src="/images/Mail.png" alt="mail" />
         <span>E-mail</span>
@@ -108,18 +108,22 @@ export default {
   methods: {
     dragMouseDown(event) {
       event.preventDefault()
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
+      const client = event.touches ? event.touches[0] : event
+      this.positions.clientX = client.clientX
+      this.positions.clientY = client.clientY
       document.onmousemove = this.elementDrag
       document.onmouseup = this.closeDragElement
+      document.ontouchmove = this.elementDrag
+      document.ontouchend = this.closeDragElement
     },
 
     elementDrag(event) {
       event.preventDefault()
-      this.positions.movementX = this.positions.clientX - event.clientX
-      this.positions.movementY = this.positions.clientY - event.clientY
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
+      const client = event.touches ? event.touches[0] : event
+      this.positions.movementX = this.positions.clientX - client.clientX
+      this.positions.movementY = this.positions.clientY - client.clientY
+      this.positions.clientX = client.clientX
+      this.positions.clientY = client.clientY
 
       this.$refs.draggableContainer.style.top =
         this.$refs.draggableContainer.offsetTop - this.positions.movementY + 'px'
@@ -130,6 +134,8 @@ export default {
     closeDragElement() {
       document.onmouseup = null
       document.onmousemove = null
+      document.ontouchmove = null
+      document.ontouchend = null
     },
 
     closeContact() {
@@ -383,6 +389,9 @@ textarea:focus {
   #email-container {
     width: 95%;
     left: 2.5%;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   #send {

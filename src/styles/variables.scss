@@ -1,1 +1,14 @@
 $font-family: 'VT323', monospace;
+
+// Responsive breakpoints (mobile-first)
+$breakpoints: (
+	'sm': 480px,
+	'md': 768px,
+	'lg': 1024px,
+	'xl': 1280px
+);
+
+$container-max-width: 1200px;
+
+// Use a fluid root font size (mobile-first) — adjusts between 14px and 18px
+$root-font-size-clamp: clamp(14px, 2.5vw, 18px);

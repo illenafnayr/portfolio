@@ -1,6 +1,6 @@
 <template>
   <div ref="draggableContainer" id="portfolio-container">
-    <div id="portfolio-header" @mousedown="dragMouseDown">
+    <div id="portfolio-header" @mousedown="dragMouseDown" @touchstart="dragMouseDown">
       <span>Aerospace Portfolio</span>
       <div class="close" v-on:click="closeAboutMe()">X</div>
     </div>
@@ -130,23 +130,29 @@ export default {
   methods: {
     dragMouseDown: function (event) {
       event.preventDefault()
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
+      const client = event.touches ? event.touches[0] : event
+      this.positions.clientX = client.clientX
+      this.positions.clientY = client.clientY
       document.onmousemove = this.elementDrag
       document.onmouseup = this.closeDragElement
+      document.ontouchmove = this.elementDrag
+      document.ontouchend = this.closeDragElement
     },
     elementDrag: function (event) {
       event.preventDefault()
-      this.positions.movementX = this.positions.clientX - event.clientX
-      this.positions.movementY = this.positions.clientY - event.clientY
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
+      const client = event.touches ? event.touches[0] : event
+      this.positions.movementX = this.positions.clientX - client.clientX
+      this.positions.movementY = this.positions.clientY - client.clientY
+      this.positions.clientX = client.clientX
+      this.positions.clientY = client.clientY
       this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px'
       this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
     },
     closeDragElement() {
       document.onmouseup = null
       document.onmousemove = null
+      document.ontouchmove = null
+      document.ontouchend = null
     },
     closeAboutMe() {
       document.querySelector('#portfolio-container').style.display = 'none'
@@ -322,9 +328,9 @@ export default {
   position: absolute;
   z-index: 10;
   height: 80vh;
-  width: 60%;
+  width: min(90vw, 800px);
   max-width: 800px;
-  min-width: 400px;
+  min-width: 260px;
   border: 2px solid;
   background-color: rgb(192, 192, 192);
   border-width: 1px;
@@ -334,7 +340,7 @@ export default {
   font-family: 'VT323', monospace;
   display: none;
   top: 5%;
-  left: 15%;
+  left: 5%;
 }
 
 #portfolio-header {
@@ -380,8 +386,9 @@ export default {
 }
 
 .project-image {
-  width: 150px;
-  height: 150px;
+  width: clamp(80px, 22vw, 150px);
+  height: auto;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   border: 2px solid #808080;
   cursor: pointer;
@@ -430,7 +437,8 @@ export default {
 
 .model-display {
   width: 100%;
-  height: 300px;
+  aspect-ratio: 16 / 9;
+  max-height: 420px;
   background-color: rgb(220, 220, 220);
   border: 2px solid #808080;
   display: flex;
@@ -483,7 +491,8 @@ export default {
   padding: 8px 16px;
   border: 2px solid rgb(192, 192, 192);
   border-color: #FFFFFF #808080 #808080 #FFFFFF;
-  min-width: 250px;
+  min-width: 0;
+  width: clamp(160px, 50%, 320px);
   justify-content: center;
 }
 

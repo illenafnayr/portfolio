@@ -1,7 +1,7 @@
 <template>
   <div ref="draggableContainer" id="resume-container">
     <!-- Header -->
-    <div id="resume-header" @mousedown="dragMouseDown">
+    <div id="resume-header" @mousedown="dragMouseDown" @touchstart="dragMouseDown">
       <span>Resume</span>
       <div class="close" @click="closePortfolio">X</div>
     </div>
@@ -341,21 +341,27 @@ export default {
   methods: {
     dragMouseDown(event) {
       event.preventDefault();
-      this.positions = { clientX: event.clientX, clientY: event.clientY };
+      const client = event.touches ? event.touches[0] : event;
+      this.positions = { clientX: client.clientX, clientY: client.clientY };
       document.onmousemove = this.elementDrag;
       document.onmouseup = this.closeDragElement;
+      document.ontouchmove = this.elementDrag;
+      document.ontouchend = this.closeDragElement;
     },
     elementDrag(event) {
-      const movementX = this.positions.clientX - event.clientX;
-      const movementY = this.positions.clientY - event.clientY;
-      this.positions.clientX = event.clientX;
-      this.positions.clientY = event.clientY;
+      const client = event.touches ? event.touches[0] : event;
+      const movementX = this.positions.clientX - client.clientX;
+      const movementY = this.positions.clientY - client.clientY;
+      this.positions.clientX = client.clientX;
+      this.positions.clientY = client.clientY;
       this.$refs.draggableContainer.style.top = this.$refs.draggableContainer.offsetTop - movementY + "px";
       this.$refs.draggableContainer.style.left = this.$refs.draggableContainer.offsetLeft - movementX + "px";
     },
     closeDragElement() {
       document.onmouseup = null;
       document.onmousemove = null;
+      document.ontouchmove = null;
+      document.ontouchend = null;
     },
     closePortfolio() {
       this.$refs.draggableContainer.style.display = "none";

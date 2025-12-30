@@ -1,6 +1,6 @@
 <template>
     <div ref="container" id="cfd-container">
-        <div id="cfd-header" @mousedown="dragMouseDown">
+        <div id="cfd-header" @mousedown="dragMouseDown" @touchstart="dragMouseDown">
             <span>🌊 CFD Simulator</span>
             <div class="close" @click="closeCFD">X</div>
         </div>
@@ -69,11 +69,14 @@ export default {
     },
     methods: {
         dragMouseDown(e) {
+            const client = e.touches ? e.touches[0] : e;
             this.dragging = true;
-            this.pos.x = e.clientX;
-            this.pos.y = e.clientY;
+            this.pos.x = client.clientX;
+            this.pos.y = client.clientY;
             document.onmousemove = this.elementDrag;
             document.onmouseup = this.closeDrag;
+            document.ontouchmove = this.elementDrag;
+            document.ontouchend = this.closeDrag;
         },
         elementDrag(e) {
             if (!this.dragging) return;
@@ -259,10 +262,24 @@ export default {
 }
 
 #cfd-canvas {
-    width: 600px;
-    height: 240px;
-    image-rendering: pixelated;
-    border: 2px inset #808080;
+        width: 100%;
+        max-width: 600px;
+        aspect-ratio: 600 / 240;
+        height: auto;
+        image-rendering: pixelated;
+        border: 2px inset #808080;
+}
+
+@media only screen and (max-width: 480px) {
+    #cfd-container {
+        left: 5%;
+        top: 5%;
+        width: 90%;
+    }
+
+    .control-row {
+        flex-direction: column;
+    }
 }
 
 #controls {
