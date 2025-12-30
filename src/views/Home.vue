@@ -4,7 +4,7 @@
 
   <!-- MAIN APP (hidden while booting) -->
   <div v-if="!bootActive" @keydown="resetScreenSaverTimer" @click="resetScreenSaverTimer"
-    @mousemove="resetScreenSaverTimer" class="home" tabindex="0">
+    @mousemove="resetScreenSaverTimer" @touchstart="resetScreenSaverTimer" class="home" tabindex="0">
     <CyanCat />
     <Desktop />
     <NavBar @activate-screensaver="activateScreenSaverImmediately" />

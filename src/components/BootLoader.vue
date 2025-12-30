@@ -53,7 +53,7 @@ System ready.`,
         if (this.currentIndex < this.fullText.length) {
           this.displayedText += this.fullText[this.currentIndex];
           this.currentIndex++;
-          setTimeout(typeNext, 15);
+          setTimeout(typeNext, 7);
         } else {
           const elapsed = Date.now() - startTime;
           const remaining = this.minDuration - elapsed;
