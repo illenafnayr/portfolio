@@ -9,8 +9,8 @@ export default [
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      globals: {
-        node: true,
+      env: {
+        node: true,      // <-- add this
         browser: true,
         es2021: true
       }
