@@ -69,7 +69,10 @@ export default {
     },
     methods: {
         dragMouseDown(e) {
-            const client = e.touches ? e.touches[0] : e;
+            const touch = e.touches && e.touches.length ? e.touches[0] : null;
+            const target = touch ? touch.target : (e.target || e.srcElement);
+            if (target && target.closest && target.closest('.close')) return;
+            const client = touch || e;
             this.dragging = true;
             this.pos.x = client.clientX;
             this.pos.y = client.clientY;
@@ -80,10 +83,11 @@ export default {
         },
         elementDrag(e) {
             if (!this.dragging) return;
-            const dx = this.pos.x - e.clientX;
-            const dy = this.pos.y - e.clientY;
-            this.pos.x = e.clientX;
-            this.pos.y = e.clientY;
+            const client = e.touches && e.touches.length ? e.touches[0] : e;
+            const dx = this.pos.x - client.clientX;
+            const dy = this.pos.y - client.clientY;
+            this.pos.x = client.clientX;
+            this.pos.y = client.clientY;
             const el = this.$refs.container;
             el.style.top = el.offsetTop - dy + "px";
             el.style.left = el.offsetLeft - dx + "px";

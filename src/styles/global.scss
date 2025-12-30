@@ -21,23 +21,14 @@ html, body, #app {
 #app {
     width: 100%;
     max-width: $container-max-width;
-    // margin: 0 auto;
-    // padding: 1rem;
 }
 
-/* Make media elements fluid */
 img, video, canvas {
     max-width: 100%;
     height: auto;
     display: block;
 }
 
-/* Slightly larger padding on medium+ screens */
-// @include respond('md') {
-//     #app { padding: 1.5rem; }
-// }
-
-/* Accessible close button sizing (use rems so it scales with font-size) */
 .close {
     border: 1px solid;
     border-width: 1px;

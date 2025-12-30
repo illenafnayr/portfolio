@@ -38,8 +38,11 @@ export default {
       document.querySelector('#game-selector-container').style.display = 'none'
     },
     dragMouseDown(event) {
+      const touch = event.touches && event.touches.length ? event.touches[0] : null;
+      const target = touch ? touch.target : (event.target || event.srcElement);
+      if (target && target.closest && target.closest('.close')) return;
       event.preventDefault();
-      const client = event.touches ? event.touches[0] : event;
+      const client = touch || event;
       this.positions = this.positions || { clientX: 0, clientY: 0, movementX: 0, movementY: 0 };
       this.positions.clientX = client.clientX;
       this.positions.clientY = client.clientY;

@@ -1,6 +1,6 @@
 <template>
   <div ref="draggableContainer" id="aboutme-container">
-    <div id="aboutme-header" @mousedown="dragMouseDown">
+    <div id="aboutme-header" @mousedown="dragMouseDown" @touchstart="dragMouseDown">
       <span>About Me</span>
       <div class="close" v-on:click="closeAboutMe()">X</div>
     </div>
@@ -32,12 +32,18 @@ export default {
   },
   methods: {
     dragMouseDown: function (event) {
+      const touch = event.touches && event.touches.length ? event.touches[0] : null;
+      const target = touch ? touch.target : (event.target || event.srcElement);
+      if (target && target.closest && target.closest('.close')) return;
       event.preventDefault()
+      const client = touch || event
       // get the mouse cursor position at startup:
-      this.positions.clientX = event.clientX
-      this.positions.clientY = event.clientY
+      this.positions.clientX = client.clientX
+      this.positions.clientY = client.clientY
       document.onmousemove = this.elementDrag
       document.onmouseup = this.closeDragElement
+      document.ontouchmove = this.elementDrag
+      document.ontouchend = this.closeDragElement
     },
     elementDrag: function (event) {
       event.preventDefault()

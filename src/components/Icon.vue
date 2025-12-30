@@ -105,8 +105,11 @@ export default {
   methods: {
     dragMouseDown(event) {
       if (!this.draggable) return;
+      const touch = event.touches && event.touches.length ? event.touches[0] : null;
+      const target = touch ? touch.target : (event.target || event.srcElement);
+      if (target && target.closest && target.closest('.close')) return;
       event.preventDefault();
-      const client = event.touches ? event.touches[0] : event;
+      const client = touch || event;
       this.positions.clientX = client.clientX;
       this.positions.clientY = client.clientY;
       document.onmousemove = this.elementDrag;

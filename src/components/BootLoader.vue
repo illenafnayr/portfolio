@@ -71,6 +71,7 @@ System ready.`,
 
 <style scoped>
 .boot-screen {
+  width: 100%;
   position: fixed;
   inset: 0;
   background-color: black;
