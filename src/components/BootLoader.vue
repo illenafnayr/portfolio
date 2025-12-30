@@ -77,16 +77,25 @@ System ready.`,
   background-color: black;
   color: #00ff00;
   font-family: "VT323", monospace;
-  font-size: 20px;
+  /* responsive base font and padding */
+  font-size: clamp(12px, 2.5vw, 20px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
   white-space: pre-wrap;
   overflow: hidden;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
 .boot-text {
   text-shadow: 0 0 2px #00ff00;
+  max-width: min(1000px, 95vw);
+  max-height: 80vh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  line-height: 1.35;
+  word-break: break-word;
 }
 </style>
