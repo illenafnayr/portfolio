@@ -37,8 +37,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: 'Email',
   data: function () {
@@ -53,7 +51,8 @@ export default {
         email: '',
         subject: '',
         message: ''
-      }
+      },
+      sending: false
     }
   },
   methods: {
@@ -82,15 +81,49 @@ export default {
     closeContact () {
       document.querySelector('#email-container').style.display = 'none'
     },
-    handleSubmit () {
-      axios
-        .post('https://fanelliapi.herokuapp.com/', this.form)
-        .then((response) => {
-          console.log(response.data)
-          alert('Your message has been sent!')
-          document.querySelector('#emailForm').reset()
-          document.querySelector('#name').value = "illenafnayr@gmail.com"
+    async handleSubmit () {
+      if (this.sending) return
+      
+      if (!this.form.email || !this.form.subject || !this.form.message) {
+        alert('Please fill in all fields')
+        return
+      }
+      
+      this.sending = true
+      
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: '105c2fae-8b7a-41a2-835c-c51ba39dd506', // Go ahead, steal it. It's my free key :)
+            subject: this.form.subject,
+            from_name: this.form.email,
+            email: this.form.email,
+            message: this.form.message,
+            to_email: 'illenafnayr@gmail.com'
+          })
         })
+        
+        const result = await response.json()
+        
+        if (result.success) {
+          alert('Your message has been sent!')
+          this.form.email = ''
+          this.form.subject = ''
+          this.form.message = ''
+        } else {
+          alert('Failed to send message. Please try again.')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        alert('Failed to send message. Please try again.')
+      } finally {
+        this.sending = false
+      }
     }
   }
 }

@@ -45,10 +45,11 @@ export default {
     const MAX_ATTEMPTS = 200;
 
     const fixedPositions = {
-      cli: { x: 0.20, y: 0.25 },
-      cfd: { x: 0.30, y: 0.25 },
-      airfoil: { x: 0.40, y: 0.25 },
-      resume: { x: 0.55, y: 0.30 }
+      cli: { x: 0.20, y: 0.23 },
+      cfd: { x: 0.30, y: 0.23 },
+      airfoil: { x: 0.40, y: 0.23 },
+      resume: { x: 0.30, y: 0.51 },
+      portfolio: { x: 0.37, y: 0.51 },
     };
 
     const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
