@@ -1,7 +1,11 @@
 <template>
   <div id="screen-saver-container">
+    <div class="crt-overlay"></div>
+
     <div class="logo" :style="logoStyle">
-      <div class="logo-text">Studio Fanelli</div>
+      <div class="logo-inner">
+        <div class="logo-text">Studio Fanelli</div>
+      </div>
     </div>
   </div>
 </template>
@@ -9,102 +13,161 @@
 <script>
 export default {
   name: "ScreenSaver",
+
   data() {
     return {
       position: { x: 100, y: 100 },
       velocity: { x: 2, y: 2 },
-      colors: ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'],
+      colors: [
+        '#00ffcc',
+        '#ffcc00',
+        '#ff6699',
+        '#66ff66',
+        '#66aaff'
+      ],
       currentColorIndex: 0,
-      logoWidth: 200,
-      logoHeight: 100,
+      logoWidth: 240,
+      logoHeight: 120,
       animationId: null
-    };
+    }
   },
+
   computed: {
     currentColor() {
-      return this.colors[this.currentColorIndex];
+      return this.colors[this.currentColorIndex]
     },
+
     logoStyle() {
       return {
         left: this.position.x + 'px',
         top: this.position.y + 'px',
-        backgroundColor: this.currentColor,
+        borderColor: this.currentColor,
+        color: this.currentColor,
+        boxShadow: `
+          0 0 12px ${this.currentColor},
+          inset 0 0 6px rgba(255,255,255,0.2)
+        `,
         fontFamily: '"VT323", monospace'
-      };
+      }
     }
   },
+
   mounted() {
-    this.animate();
+    this.animate()
   },
+
   beforeUnmount() {
     if (this.animationId) {
-      cancelAnimationFrame(this.animationId);
+      cancelAnimationFrame(this.animationId)
     }
   },
+
   methods: {
     animate() {
-      const container = document.getElementById('screen-saver-container');
-      const maxX = container.clientWidth - this.logoWidth;
-      const maxY = container.clientHeight - this.logoHeight;
+      const container = document.getElementById('screen-saver-container')
+      const maxX = container.clientWidth - this.logoWidth
+      const maxY = container.clientHeight - this.logoHeight
 
-      this.position.x += this.velocity.x;
-      this.position.y += this.velocity.y;
+      this.position.x += this.velocity.x
+      this.position.y += this.velocity.y
 
       if (this.position.x <= 0 || this.position.x >= maxX) {
-        this.velocity.x *= -1;
-        this.changeColor();
-        this.position.x = Math.max(0, Math.min(this.position.x, maxX));
+        this.velocity.x *= -1
+        this.changeColor()
+        this.position.x = Math.max(0, Math.min(this.position.x, maxX))
       }
 
       if (this.position.y <= 0 || this.position.y >= maxY) {
-        this.velocity.y *= -1;
-        this.changeColor();
-        this.position.y = Math.max(0, Math.min(this.position.y, maxY));
+        this.velocity.y *= -1
+        this.changeColor()
+        this.position.y = Math.max(0, Math.min(this.position.y, maxY))
       }
 
-      this.animationId = requestAnimationFrame(this.animate);
+      this.animationId = requestAnimationFrame(this.animate)
     },
+
     changeColor() {
-      this.currentColorIndex = (this.currentColorIndex + 1) % this.colors.length;
+      this.currentColorIndex =
+        (this.currentColorIndex + 1) % this.colors.length
     }
   }
-};
+}
 </script>
 
-<style>
+<style scoped>
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
-body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
+/* RESET */
+* {
+  box-sizing: border-box;
 }
 
 #screen-saver-container {
-  height: 100vh;
   width: 100vw;
-  background-color: #000;
+  height: 100vh;
+  opacity: 0.75;
   position: relative;
   overflow: hidden;
+
+  /* subtle pixel grid */
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 4px 4px;
 }
 
+/* CRT overlay */
+.crt-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.15),
+      rgba(0,0,0,0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+  z-index: 2;
+}
+
+/* LOGO FRAME */
 .logo {
   position: absolute;
-  width: 200px;
-  height: 100px;
+  width: 240px;
+  height: 120px;
+
+  border: 3px solid;
+  background-color: #000;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid #fff;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-  transition: background-color 0.3s ease;
+
+  z-index: 1;
 }
 
+/* Inner bevel */
+.logo-inner {
+  width: calc(100% - 12px);
+  height: calc(100% - 12px);
+  border: 2px solid;
+  border-color: #444 #111 #111 #444;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* TEXT */
 .logo-text {
-  font-size: 28px;
-  font-weight: bold;
-  color: #fff;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-  letter-spacing: 2px;
+  font-size: 32px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+
+  text-shadow:
+    0 0 6px currentColor,
+    0 0 12px currentColor;
 }
 </style>

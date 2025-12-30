@@ -2,36 +2,60 @@
   <div ref="draggableContainer" id="email-container">
     <div id="email-header" @mousedown="dragMouseDown">
       <span>E-mail</span>
-      <div class="close" v-on:click="closeContact()">X</div>
+      <div class="close" @click="closeContact()">X</div>
     </div>
+
     <br>
-    <form v-on:submit.prevent="handleSubmit()" encType="multipart/form-data" id="emailForm">
-        <div id="emailMeta">
-          <div id="metaContainer">
-            <div class="metaDiv">
-              <label for="name">To: </label>
-              <input id="name" type="text" name="name" value="illenafnayr@gmail.com" disabled="disabled"><br>
-            </div>
 
-            <div class="metaDiv">
-              <label for="email">Cc: </label>
-              <input  id="email" type="email" name="email" placeholder="Your E-mail address" v-model="form.email"><br>
-            </div>
+    <form @submit.prevent="handleSubmit()" id="emailForm">
 
-            <div>
-              <label for="subject">Subject: </label>
-              <input type="text" name="subject" id="subject" v-model="form.subject"><br>
-            </div>
+      <div id="emailMeta">
+        <div id="metaContainer">
+
+          <div class="metaDiv">
+            <label for="name">To: </label>
+            <input id="name" type="text" value="illenafnayr@gmail.com" disabled>
           </div>
-          <button type="submit" id="send">
-            <img src="/images/Letter.png" alt="send">
-            <span>Send</span>
-          </button>
+
+          <div class="metaDiv">
+            <label for="email">Cc: </label>
+            <input id="email" type="email" placeholder="Your E-mail address" v-model="form.email">
+          </div>
+
+          <div>
+            <label for="subject">Subject: </label>
+            <input id="subject" type="text" v-model="form.subject">
+          </div>
+
         </div>
-        <br>
-        <div id="emailBody">
-          <textarea name="message" id="text" v-model="form.message" ></textarea><br>
+
+        <button type="submit" id="send" :disabled="sending">
+          <img src="/images/Letter.png" alt="send">
+          <span>Send</span>
+        </button>
+      </div>
+
+      <!-- STATUS BAR -->
+      <div id="status-bar" v-if="status !== 'idle'">
+        <div v-if="status === 'sending'" class="status sending">
+          <span class="hourglass"></span>
+          Sending{{ sendingDots }}
         </div>
+
+        <div v-if="status === 'success'" class="status success">
+          ✔ Transmission complete. Message delivered successfully.
+        </div>
+
+        <div v-if="status === 'error'" class="status error">
+          ✖ Transmission failed. Please retry.
+        </div>
+      </div>
+      
+      <div id="emailBody">
+        <textarea id="text" v-model="form.message"></textarea>
+      </div>
+      <br>
+      <br>
     </form>
   </div>
 </template>
@@ -39,58 +63,90 @@
 <script>
 export default {
   name: 'Email',
-  data: function () {
+
+  data() {
     return {
       positions: {
         clientX: undefined,
         clientY: undefined,
         movementX: 0,
-        movementY: 0,
+        movementY: 0
       },
+
       form: {
         email: '',
         subject: '',
         message: ''
       },
-      sending: false
+
+      sending: false,
+      status: 'idle', // idle | sending | success | error
+      sendingDots: '.',
+      dotInterval: null
     }
   },
+
   methods: {
-    dragMouseDown: function (event) {
+    dragMouseDown(event) {
       event.preventDefault()
-      // get the mouse cursor position at startup:
       this.positions.clientX = event.clientX
       this.positions.clientY = event.clientY
       document.onmousemove = this.elementDrag
       document.onmouseup = this.closeDragElement
     },
-    elementDrag: function (event) {
+
+    elementDrag(event) {
       event.preventDefault()
       this.positions.movementX = this.positions.clientX - event.clientX
       this.positions.movementY = this.positions.clientY - event.clientY
       this.positions.clientX = event.clientX
       this.positions.clientY = event.clientY
-      // set the element's new position:
-      this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px'
-      this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
+
+      this.$refs.draggableContainer.style.top =
+        (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px'
+      this.$refs.draggableContainer.style.left =
+        (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
     },
-    closeDragElement () {
+
+    closeDragElement() {
       document.onmouseup = null
       document.onmousemove = null
     },
-    closeContact () {
+
+    closeContact() {
       document.querySelector('#email-container').style.display = 'none'
     },
-    async handleSubmit () {
+
+    startDots() {
+      this.sendingDots = '.'
+      this.dotInterval = setInterval(() => {
+        this.sendingDots =
+          this.sendingDots.length < 3
+            ? this.sendingDots + '.'
+            : '.'
+      }, 500)
+    },
+
+    stopDots() {
+      clearInterval(this.dotInterval)
+      this.dotInterval = null
+    },
+
+    async handleSubmit() {
       if (this.sending) return
-      
+
       if (!this.form.email || !this.form.subject || !this.form.message) {
-        alert('Please fill in all fields')
+        this.status = 'error'
+        // setTimeout(() => {
+        //   this.status = 'idle'
+        // }, 5000)
         return
       }
-      
+
       this.sending = true
-      
+      this.status = 'sending'
+      this.startDots()
+
       try {
         const response = await fetch('https://api.web3forms.com/submit', {
           method: 'POST',
@@ -99,7 +155,7 @@ export default {
             'Accept': 'application/json'
           },
           body: JSON.stringify({
-            access_key: '105c2fae-8b7a-41a2-835c-c51ba39dd506', // Go ahead, steal it. It's my free key :)
+            access_key: '105c2fae-8b7a-41a2-835c-c51ba39dd506',
             subject: this.form.subject,
             from_name: this.form.email,
             email: this.form.email,
@@ -107,57 +163,60 @@ export default {
             to_email: 'illenafnayr@gmail.com'
           })
         })
-        
+
         const result = await response.json()
-        
+
         if (result.success) {
-          alert('Your message has been sent!')
+          this.status = 'success'
           this.form.email = ''
           this.form.subject = ''
           this.form.message = ''
         } else {
-          alert('Failed to send message. Please try again.')
+          this.status = 'error'
         }
-      } catch (error) {
-        console.error('Error:', error)
-        alert('Failed to send message. Please try again.')
+      } catch (err) {
+        console.error(err)
+        this.status = 'error'
       } finally {
         this.sending = false
+        this.stopDots()
+        setTimeout(() => {
+          this.status = 'idle'
+        }, 5000)
       }
     }
   }
 }
 </script>
 
+
 <style lang="scss" scoped>
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-
 
 #email-container {
   position: absolute;
   z-index: 10;
-  height: 370px;
+  height: fit-content;
   width: 50%;
-  border: 2px solid;
-  background-color: rgb(192,192,192);
-  border-width:1px;
-  border-color:#FFFFFF #808080 #808080 #FFFFFF;
+  background-color: rgb(192, 192, 192);
+  border: 1px solid;
+  border-color: #FFFFFF #808080 #808080 #FFFFFF;
   resize: both;
-  overflow: auto;
   font-family: 'VT323', monospace;
-  text-align:center;
+  text-align: center;
   display: none;
   top: 21%;
   left: 30%;
 }
+
 #email-header {
-  cursor:move;
-  z-index: 10;
+  cursor: move;
   border: 1px solid black;
   color: white;
-  background-image: linear-gradient(90deg, rgb(0,0,123), black);
+  background-image: linear-gradient(90deg, rgb(0, 0, 123), black);
   display: flex;
   justify-content: space-between;
+  padding: 2px 6px;
 }
 
 #emailForm {
@@ -181,22 +240,25 @@ export default {
 
 #send {
   border: 1px solid black;
+  background-color: rgb(192, 192, 192);
   display: flex;
-  background-color: rgb(192,192,192);
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 64px;
   height: 64px;
   margin-left: 5px;
-  box-sizing: border-box;
-  outline: none;
-  border-color:#FFFFFF #808080 #808080 #FFFFFF;
+  border-color: #FFFFFF #808080 #808080 #FFFFFF;
   cursor: pointer;
 }
 
 #send:active {
-  border-color: #808080  #FFFFFF  #FFFFFF #808080;
+  border-color: #808080 #FFFFFF #FFFFFF #808080;
+}
+
+#send:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 #text {
@@ -204,32 +266,75 @@ export default {
   height: 200px;
 }
 
-@media only screen and (max-width: 740px) {
+/* STATUS BAR */
+#status-bar {
+  width: 90%;
+  margin: 6px auto 6px auto;
+  /* ← bottom margin added */
+  padding: 4px;
+  border: 1px solid black;
+  background-color: rgb(192, 192, 192);
+  border-color: #808080 #FFFFFF #FFFFFF #808080;
+  text-align: left;
+}
 
+.status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status.success {
+  color: darkgreen;
+}
+
+.status.error {
+  color: darkred;
+}
+
+/* Hourglass */
+
+.hourglass {
+  width: 12px;
+  height: 12px;
+  border: 2px solid black;
+  border-top-color: transparent;
+  animation: spin 1s steps(6) infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile */
+
+@media only screen and (max-width: 740px) {
   #email-container {
     width: 95%;
     left: 2.5%;
   }
 
-   input{
-     width: 30%;
-   }
+  input {
+    width: 30%;
+  }
 
-   #send {
-     width: 32px;
-     height: 32px;
-     border: none;
-     margin-left: 0;
-   }
+  #send {
+    width: 32px;
+    height: 32px;
+    border: none;
+    margin-left: 0;
+  }
 
-   .metaDiv {
-     margin: 0;
-     width:120%
-   }
+  .metaDiv {
+    margin: 0;
+    width: 120%;
+  }
 
-   #text {
-     height: 200px;
-     width:80%;
-   }
+  #text {
+    height: 200px;
+    width: 80%;
+  }
 }
 </style>

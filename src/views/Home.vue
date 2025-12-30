@@ -1,5 +1,5 @@
 <template>
-  <div v-show="!screenSaverActive" @keydown="resetScreenSaverTimer" @click="resetScreenSaverTimer"
+  <div @keydown="resetScreenSaverTimer" @click="resetScreenSaverTimer"
     @mousemove="resetScreenSaverTimer" class="home" tabindex="0">
     <CyanCat />
     <Desktop />
@@ -89,6 +89,5 @@ body {
   width: 100vw;
   height: 100vh;
   z-index: 9999;
-  background-color: black;
 }
 </style>
