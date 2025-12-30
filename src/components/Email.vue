@@ -1,36 +1,52 @@
 <template>
   <div ref="draggableContainer" id="email-container">
+    <!-- WINDOW HEADER -->
     <div id="email-header" @mousedown="dragMouseDown">
-      <span>E-mail</span>
-      <div class="close" @click="closeContact()">X</div>
+      <div class="title">
+        <img src="/images/Mail.png" alt="mail" />
+        <span>E-mail</span>
+      </div>
+      <div class="close" @click="closeContact()">✕</div>
     </div>
 
-    <br>
-
+    <!-- FORM -->
     <form @submit.prevent="handleSubmit()" id="emailForm">
-
+      <!-- META -->
       <div id="emailMeta">
         <div id="metaContainer">
+          <div class="metaDiv">
+            <label for="name">To:</label>
+            <input
+              id="name"
+              type="text"
+              value="illenafnayr@gmail.com"
+              disabled
+            />
+          </div>
 
           <div class="metaDiv">
-            <label for="name">To: </label>
-            <input id="name" type="text" value="illenafnayr@gmail.com" disabled>
+            <label for="email">Cc:</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="your@email.com"
+              v-model="form.email"
+            />
           </div>
 
           <div class="metaDiv">
-            <label for="email">Cc: </label>
-            <input id="email" type="email" placeholder="Your E-mail address" v-model="form.email">
+            <label for="subject">Subject:</label>
+            <input
+              id="subject"
+              type="text"
+              v-model="form.subject"
+            />
           </div>
-
-          <div>
-            <label for="subject">Subject: </label>
-            <input id="subject" type="text" v-model="form.subject">
-          </div>
-
         </div>
 
+        <!-- SEND BUTTON -->
         <button type="submit" id="send" :disabled="sending">
-          <img src="/images/Letter.png" alt="send">
+          <img src="/images/Letter.png" alt="send" />
           <span>Send</span>
         </button>
       </div>
@@ -50,12 +66,15 @@
           ✖ Transmission failed. Please retry.
         </div>
       </div>
-      
+
+      <!-- MESSAGE BODY -->
       <div id="emailBody">
-        <textarea id="text" v-model="form.message"></textarea>
+        <textarea
+          id="text"
+          v-model="form.message"
+          placeholder="Type your message here..."
+        ></textarea>
       </div>
-      <br>
-      <br>
     </form>
   </div>
 </template>
@@ -67,8 +86,8 @@ export default {
   data() {
     return {
       positions: {
-        clientX: undefined,
-        clientY: undefined,
+        clientX: null,
+        clientY: null,
         movementX: 0,
         movementY: 0
       },
@@ -103,9 +122,9 @@ export default {
       this.positions.clientY = event.clientY
 
       this.$refs.draggableContainer.style.top =
-        (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px'
+        this.$refs.draggableContainer.offsetTop - this.positions.movementY + 'px'
       this.$refs.draggableContainer.style.left =
-        (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
+        this.$refs.draggableContainer.offsetLeft - this.positions.movementX + 'px'
     },
 
     closeDragElement() {
@@ -121,9 +140,7 @@ export default {
       this.sendingDots = '.'
       this.dotInterval = setInterval(() => {
         this.sendingDots =
-          this.sendingDots.length < 3
-            ? this.sendingDots + '.'
-            : '.'
+          this.sendingDots.length < 3 ? this.sendingDots + '.' : '.'
       }, 500)
     },
 
@@ -137,9 +154,6 @@ export default {
 
       if (!this.form.email || !this.form.subject || !this.form.message) {
         this.status = 'error'
-        // setTimeout(() => {
-        //   this.status = 'idle'
-        // }, 5000)
         return
       }
 
@@ -152,7 +166,7 @@ export default {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            Accept: 'application/json'
           },
           body: JSON.stringify({
             access_key: '105c2fae-8b7a-41a2-835c-c51ba39dd506',
@@ -189,71 +203,122 @@ export default {
 }
 </script>
 
-
 <style lang="scss" scoped>
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
+/* WINDOW */
 #email-container {
   position: absolute;
-  z-index: 10;
-  height: fit-content;
-  width: 50%;
-  background-color: rgb(192, 192, 192);
-  border: 1px solid;
-  border-color: #FFFFFF #808080 #808080 #FFFFFF;
-  resize: both;
-  font-family: 'VT323', monospace;
-  text-align: center;
-  display: none;
   top: 21%;
   left: 30%;
+  width: 520px;
+  background-color: rgb(192, 192, 192);
+  border: 2px solid;
+  border-color: #ffffff #404040 #404040 #ffffff;
+  box-shadow: 2px 2px 0 #000;
+  font-family: 'VT323', monospace;
+  display: none;
+  z-index: 10;
 }
 
+/* CRT SCANLINES */
+#email-container::after {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.04),
+    rgba(0, 0, 0, 0.04) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+/* HEADER */
 #email-header {
   cursor: move;
-  border: 1px solid black;
+  background: linear-gradient(90deg, rgb(0, 0, 128), rgb(0, 0, 64));
   color: white;
-  background-image: linear-gradient(90deg, rgb(0, 0, 123), black);
   display: flex;
   justify-content: space-between;
-  padding: 2px 6px;
+  align-items: center;
+  padding: 3px 6px;
+  font-size: 18px;
 }
 
-#emailForm {
+.title {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 
+.title img {
+  width: 16px;
+  height: 16px;
+}
+
+/* FORM */
+#emailForm {
+  padding: 8px;
+}
+
+/* META */
 #emailMeta {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 #metaContainer {
   display: flex;
   flex-direction: column;
+  gap: 6px;
 }
 
 .metaDiv {
-  margin-left: 32px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
 }
 
+/* INPUTS */
+input,
+textarea {
+  background: white;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  padding: 4px;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+}
+
+/* SEND BUTTON */
 #send {
-  border: 1px solid black;
+  width: 64px;
+  height: 64px;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
   background-color: rgb(192, 192, 192);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  width: 64px;
-  height: 64px;
-  margin-left: 5px;
-  border-color: #FFFFFF #808080 #808080 #FFFFFF;
+  justify-content: center;
   cursor: pointer;
 }
 
+#send:hover {
+  background-color: rgb(200, 200, 200);
+}
+
 #send:active {
-  border-color: #808080 #FFFFFF #FFFFFF #808080;
+  border-color: #808080 #ffffff #ffffff #808080;
 }
 
 #send:disabled {
@@ -261,21 +326,15 @@ export default {
   cursor: not-allowed;
 }
 
-#text {
-  width: 350px;
-  height: 200px;
-}
-
 /* STATUS BAR */
 #status-bar {
-  width: 90%;
-  margin: 6px auto 6px auto;
-  /* ← bottom margin added */
-  padding: 4px;
-  border: 1px solid black;
-  background-color: rgb(192, 192, 192);
-  border-color: #808080 #FFFFFF #FFFFFF #808080;
-  text-align: left;
+  height: 24px;
+  margin: 6px 0;
+  display: flex;
+  align-items: center;
+  padding: 2px 6px;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
 }
 
 .status {
@@ -292,8 +351,7 @@ export default {
   color: darkred;
 }
 
-/* Hourglass */
-
+/* HOURGLASS */
 .hourglass {
   width: 12px;
   height: 12px;
@@ -308,33 +366,28 @@ export default {
   }
 }
 
-/* Mobile */
+/* MESSAGE BODY */
+#emailBody {
+  margin-top: 6px;
+  display: flex;
+}
 
+#text {
+  width: 100%;
+  height: 220px;
+  resize: none;
+}
+
+/* MOBILE */
 @media only screen and (max-width: 740px) {
   #email-container {
     width: 95%;
     left: 2.5%;
   }
 
-  input {
-    width: 30%;
-  }
-
   #send {
-    width: 32px;
-    height: 32px;
-    border: none;
-    margin-left: 0;
-  }
-
-  .metaDiv {
-    margin: 0;
-    width: 120%;
-  }
-
-  #text {
-    height: 200px;
-    width: 80%;
+    width: 48px;
+    height: 48px;
   }
 }
 </style>
