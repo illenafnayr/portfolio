@@ -1,12 +1,17 @@
 <template>
-  <div @keydown="resetScreenSaverTimer" @click="resetScreenSaverTimer"
+  <!-- BOOT LOADER -->
+  <BootLoader :active="bootActive" :minDuration="2000" @finished="onBootFinished" />
+
+  <!-- MAIN APP (hidden while booting) -->
+  <div v-if="!bootActive" @keydown="resetScreenSaverTimer" @click="resetScreenSaverTimer"
     @mousemove="resetScreenSaverTimer" class="home" tabindex="0">
     <CyanCat />
     <Desktop />
     <NavBar @activate-screensaver="activateScreenSaverImmediately" />
   </div>
 
-  <div v-if="screenSaverActive" @keydown="stopScreenSaver" @click="stopScreenSaver" @mousemove="stopScreenSaver"
+  <!-- SCREENSAVER -->
+  <div v-if="screenSaverActive && !bootActive" @keydown="stopScreenSaver" @click="stopScreenSaver" @mousemove="stopScreenSaver"
     class="screen-saver" tabindex="0">
     <ScreenSaver />
   </div>
@@ -17,6 +22,7 @@ import Desktop from "@/components/Desktop.vue";
 import NavBar from "@/components/NavBar.vue";
 import CyanCat from "@/components/CyanCat.vue";
 import ScreenSaver from "@/components/ScreenSaver.vue";
+import BootLoader from "@/components/BootLoader.vue";
 
 export default {
   name: "Home",
@@ -25,12 +31,14 @@ export default {
     Desktop,
     NavBar,
     ScreenSaver,
+    BootLoader,
   },
   data() {
     return {
       screenSaverActive: false,
       timer: null,
       inactivityDelay: 1000 * 15,
+      bootActive: true,
     };
   },
   mounted() {
@@ -63,6 +71,10 @@ export default {
     activateScreenSaverImmediately() {
       clearTimeout(this.timer);
       this.screenSaverActive = true;
+    },
+
+    onBootFinished() {
+      this.bootActive = false;
     },
   },
 };
