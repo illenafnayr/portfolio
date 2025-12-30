@@ -94,7 +94,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 /* RESET */
@@ -105,9 +105,10 @@ export default {
 #screen-saver-container {
   width: 100vw;
   height: 100vh;
-  opacity: 0.75;
   position: relative;
   overflow: hidden;
+  background-color: $color-background;
+  opacity: 0.8;
 
   /* subtle pixel grid */
   background-image:

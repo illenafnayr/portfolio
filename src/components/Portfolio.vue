@@ -25,8 +25,8 @@
 
       <!-- RC Plane Project -->
       <div class="project-section">
-        <h3>Custom RC Aircraft Build</h3>
-        <p>Construction of a 3d printed radio-controlled aircraft</p>
+        <h3>RC Aircraft Build</h3>
+        <p>Construction of a 3D printed radio-controlled aircraft</p>
         <div class="image-gallery">
           <img :src="rcPlane1" alt="RC Plane Build 1" class="project-image" @click="openImage(rcPlane1)" />
           <img :src="rcPlane2" alt="RC Plane Build 2" class="project-image" @click="openImage(rcPlane2)" />
@@ -101,7 +101,7 @@ import rcPlane1 from '/images/rcplane1.png'
 import rcPlane2 from '/images/rcplane2.png'
 import rcPlane3 from '/images/rcplane3.png'
 import rcPlane4 from '/images/rcplane4.png'
-import h2vtolPdfUrl from '/images/Hydrogen_Fuel_Cell_VTOL_RC_Aircraft.pdf'
+import h2vtolPdfUrl from '/images/H2_VTOL.pdf'
 import nOxReductionPdfUrl2 from '/images/NOx_Reduction_Research.pdf'
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
