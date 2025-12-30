@@ -10,7 +10,7 @@ const ssh = new NodeSSH();
 const config = {
   host: process.env.SSH_HOST,
   username: process.env.SSH_USER,
-  privateKey: process.env.SSH_PRIVATE_KEY_PATH,
+  privateKeyPath: process.env.SSH_PRIVATE_KEY_PATH,
   port: process.env.SSH_PORT ? parseInt(process.env.SSH_PORT) : 22,
   remotePath: process.env.SSH_TARGET_DIR
 };
@@ -23,7 +23,7 @@ async function deploy() {
     console.log(`Connecting to ${config.host}...`);
     await ssh.connect(config);
 
-    console.log('📦 Uploading files...');
+    console.log('Uploading files, DO NOT INTERRUPT...');
     await ssh.putDirectory('dist', config.remotePath, {
       recursive: true,
       concurrency: 5,
@@ -41,7 +41,7 @@ async function deploy() {
     console.log('Deployment complete');
     ssh.dispose();
   } catch (err) {
-    console.error(' Deployment failed:', err);
+    console.error('Deployment failed:', err);
   }
 }
 
